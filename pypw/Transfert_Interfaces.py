@@ -24,7 +24,6 @@
 
 import numpy as np
 
-
 def Interface_Fluid_Pem(O):
    
 #Tau=-inv([O(2,2) O(2,3);O(6,2) O(6,3)])*[O(2,1);O(6,1)];
