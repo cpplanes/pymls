@@ -27,13 +27,15 @@ import numpy as np
 from transfert_layers import *
 from transfert_interfaces import *
 from pw_resolution import *
-from initialize_omega_n_moins import *
+from initialize_omega_n_plus import *
+from media import from_yaml,Air
+
 
 freq=1000
 omega=2*np.pi*freq
  
-K_0 =1.418891313475211e+05
-rho_0 =1.204215082737155 
+K_0 =Air.K
+rho_0 =Air.rho 
 d=0.05
 
 
@@ -45,7 +47,7 @@ k_0=omega*np.sqrt(rho_0/K_0)
 k_x=k_0*np.sin(theta*np.pi/180)
 Z_0=np.sqrt(rho_0*K_0)
 
-Omega_moins=Initialize_Omega_n_moins()   
+Omega_moins=Initialize_Omega_n_plus()   
 
 (Omega_plus,Xi)=  Transfert_Fluid(Omega_moins,omega,k_x,K_0,rho_0,d)
 

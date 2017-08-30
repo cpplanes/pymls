@@ -27,7 +27,7 @@ from numpy.lib.scimath import *
 
 # Function which return the reflexion coefficient at the incident interface
 
-def Initialize_Omega_n_moins():
+def Initialize_Omega_n_plus():
     
     # For a rigid backing
     Omega_moins=np.matrix('0;1') 

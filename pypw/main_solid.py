@@ -39,9 +39,12 @@ K_0 =rho_0*c_0**2
 d=0.5e-3
 
 
-lambda_verre =4.820087500000000e+10
-mu_verre = 6.072612500000000e+10
-rho_verre = 5000
+from media import from_yaml,Air
+
+verre=from_yaml('verre.yaml')
+
+print(Air.rho)
+
 
 theta=10
 
@@ -61,9 +64,12 @@ Omega_n_plus=np.array([[-1j*k_z/(rho_0*omega**2)],[1]]);
 Omega_n_moins=Interface_Solid_Fluid(Omega_n_plus)
 #print(Omega_n_moins)
 
-(Omega_1_plus,Xi_1)=Transfert_Elastic(Omega_n_moins,omega,k_x,lambda_verre,mu_verre,rho_verre,d)
+(Omega_1_plus,Xi_1)=Transfert_Elastic(Omega_n_moins,omega,k_x,verre,d)
 
+(Omega_0_moins,Tau)=Interface_Fluid_Solid(Omega_1_plus)
 
+print(Omega_0_moins)
+print(Tau)
 
 
 

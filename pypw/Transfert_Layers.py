@@ -44,27 +44,27 @@ def Transfert_Fluid(Omega_moins,omega,k_x,K_eq,rho_eq,d):
     return (Omega_plus,Xi)
 
 
-def Transfert_Elastic(Omega_moins,omega,k_x,lambda_mat,mu_mat,rho_mat,d):
+def Transfert_Elastic(Omega_moins,omega,k_x,Mat,d):
 
-    P_mat=lambda_mat+2*mu_mat  
-    delta_p=omega*sqrt(rho_mat/P_mat)
-    delta_s=omega*sqrt(rho_mat/mu_mat)
+    P_mat=Mat.lambda_+2*Mat.mu  
+    delta_p=omega*sqrt(Mat.rho/P_mat)
+    delta_s=omega*sqrt(Mat.rho/Mat.mu)
 
     beta_p=sqrt(delta_p**2-k_x**2)
     beta_s=sqrt(delta_s**2-k_x**2)
 
-    alpha_p=-1j*lambda_mat*delta_p**2-1j*2*mu_mat*beta_p**2
-    alpha_s= 2j*mu_mat*beta_s*k_x
+    alpha_p=-1j*Mat.lambda_*delta_p**2-1j*2*Mat.mu*beta_p**2
+    alpha_s= 2j*Mat.mu*beta_s*k_x
     
 #    print(alpha_p)
 #    print(alpha_s)
 #
 
     Phi_0=np.zeros((4,4),dtype=np.complex);
-    Phi_0[0,0]=-2*1j*mu_mat*beta_p*k_x
-    Phi_0[0,1]=2*1j*mu_mat*beta_p*k_x
-    Phi_0[0,2]=1j*mu_mat*(beta_s**2-k_x**2)
-    Phi_0[0,3]=1j*mu_mat*(beta_s**2-k_x**2)
+    Phi_0[0,0]=-2*1j*Mat.mu*beta_p*k_x
+    Phi_0[0,1]=2*1j*Mat.mu*beta_p*k_x
+    Phi_0[0,2]=1j*Mat.mu*(beta_s**2-k_x**2)
+    Phi_0[0,3]=1j*Mat.mu*(beta_s**2-k_x**2)
     
     Phi_0[1,0]= beta_p
     Phi_0[1,1]=-beta_p
