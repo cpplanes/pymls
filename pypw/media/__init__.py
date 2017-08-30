@@ -7,7 +7,8 @@ from .eqf import EqFluidJCA
 
 
 __MEDIUMCLASSES_MAP = {
-    'eqf_jca': EqFluidJCA
+    'eqf_jca': EqFluidJCA,
+    'elastic': Elastic
 }
 
 

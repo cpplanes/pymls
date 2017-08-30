@@ -1,0 +1,58 @@
+#! /usr/bin/env python
+# -*- coding:utf8 -*-
+#
+# elastic.py
+#
+# This file is part of pypw, a software distributed under the MIT license.
+# For any question, please contact one of the authors cited below.
+#
+# Copyright (c) 2017
+# 	Olivier Dazel <olivier.dazel@univ-lemans.fr>
+# 	Mathieu Gaborit <gaborit@kth.se>
+# 	Peter Göransson <pege@kth.se>
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# 
+#
+
+from .medium import Medium
+
+
+class Elastic(Medium):
+
+    MEDIUM_TYPE = 'elastic'
+    EXPECTED_FIELDS = [
+        'E',  # Young's modulus
+        'nu',  # Poisson ratio
+        'rho',  # Density
+        'eta'  # loss factor
+    ]
+
+    def __init__(self):
+        super().__init__()
+
+        self.E = None
+        self.rho = None
+        self.nu = None
+        self.eta = None
+        self.lambda_ = None
+        self.mu = None
+
+    def from_dict(self, *a, **kw):
+        super().from_dict(*a, **kw)
+        self.lambda_ = (1+1j*self.eta)*(self.E*nself.u)/((1+self.nu)*(1-2*self.nu));
+        self.mu = (1+1j*self.eta)*(self.E)/(2*(1+self.nu));
+
+    def update_frequency(self, frequency):
+        self.frequency = frequency
+
+
