@@ -4,6 +4,7 @@ import yaml
 from .medium import Medium
 from .air import Air
 from .eqf import EqFluidJCA
+from .elastic import Elastic
 
 
 __MEDIUMCLASSES_MAP = {
