@@ -37,10 +37,6 @@ def Transfert_Fluid(Omega_moins,omega,k_x,K_eq,rho_eq,d):
     Psi=(rho_eq*omega**2/(2*lambda_))*np.matrix([[-1,lambda_/(rho_eq*omega**2)],[1,lambda_/(rho_eq*omega**2)]])
 
     
-    Phi1Psi1=np.matrix([[Phi[0,1]*Psi[1,0], Phi[0,1]*Psi[1,1] ], [Phi[1,1]*Psi[1,0], Phi[1,1]*Psi[1,1] ]])
-    
-    Omega_plus=Phi[:,0]+np.exp(-2*lambda_*d)*np.dot(Phi1Psi1,Omega_moins)/(Psi[0,0]*Omega_moins[0]+Psi[0,1]*Omega_moins[1])
-    
     Omega_plus=Phi[:,0]+np.exp(-2*lambda_*d)*Phi[:,1].dot(Psi[1,:]).dot(Omega_moins)/(Psi[0,:].dot(Omega_moins))
     
     Xi=np.exp(-lambda_*d)/np.dot(Psi[0,:],Omega_moins);
@@ -49,17 +45,17 @@ def Transfert_Fluid(Omega_moins,omega,k_x,K_eq,rho_eq,d):
 
 
 
-#def  Transfert_Solid(Omega_moins,omega,k_x,lambda,mu,rho,d)
+#def  Transfert_Elastic(Omega_moins,omega,k_x,Mat,d)
 #
 #
-#    P=lambda+2*mu;  
-#    delta_P=omega*sqrt(rho/(P));
-#    delta_s=omega*sqrt(rho/(mu));
+#    P=Mat.lambda+2*Mat.mu  
+#    delta_P=omega*sqrt(Mat.rho/P)
+#    delta_s=omega*sqrt(Mat.rho/Mat.mu)
 #
-#    beta_P=sqrt(delta_P^2-k_x^2);
-#    beta_s=sqrt(delta_s^2-k_x^2);
+#    beta_P=sqrt(delta_P**2-k_x**2)
+#    beta_s=sqrt(delta_s**2-k_x**2)
 #
-#    alpha_P=-j*lambda*delta_P^2-j*2*mu*beta_P^2;
+#    alpha_P=-1j*Mat.lambda*delta_P**2-1j*2*Mat.mu*beta_P**2
 #    alpha_s= 2*j*mu*beta_s*k_x;
 #
 #    V_0=np.matrix([1j*beta_P,-1j*beta_P,1j*beta_s,-1j*beta_s]);
@@ -91,7 +87,7 @@ def Transfert_Fluid(Omega_moins,omega,k_x,K_eq,rho_eq,d):
 #        Phi(:,i_m)=Phi_0(:,indice(4+1-i_m));
 #        V(i_m,i_m)=V_0(indice(4+1-i_m),indice(4+1-i_m));
 #
-#    lambda=diag(V);
+#    lambda_=diag(V);
 #
 #    Phi_inv=inv(Phi);
 #
