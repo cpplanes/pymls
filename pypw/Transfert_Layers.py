@@ -44,73 +44,77 @@ def Transfert_Fluid(Omega_moins,omega,k_x,K_eq,rho_eq,d):
     return (Omega_plus,Xi)
 
 
+def Transfert_Elastic(Omega_moins,omega,k_x,lambda_mat,mu_mat,rho_mat,d):
 
-#def  Transfert_Elastic(Omega_moins,omega,k_x,Mat,d)
+    P_mat=lambda_mat+2*mu_mat  
+    delta_p=omega*sqrt(rho_mat/P_mat)
+    delta_s=omega*sqrt(rho_mat/mu_mat)
+
+    beta_p=sqrt(delta_p**2-k_x**2)
+    beta_s=sqrt(delta_s**2-k_x**2)
+
+    alpha_p=-1j*lambda_mat*delta_p**2-1j*2*mu_mat*beta_p**2
+    alpha_s= 2j*mu_mat*beta_s*k_x
+    
+#    print(alpha_p)
+#    print(alpha_s)
+#
+
+    Phi_0=np.zeros((4,4),dtype=np.complex);
+    Phi_0[0,0]=-2*1j*mu_mat*beta_p*k_x
+    Phi_0[0,1]=2*1j*mu_mat*beta_p*k_x
+    Phi_0[0,2]=1j*mu_mat*(beta_s**2-k_x**2)
+    Phi_0[0,3]=1j*mu_mat*(beta_s**2-k_x**2)
+    
+    Phi_0[1,0]= beta_p
+    Phi_0[1,1]=-beta_p
+    Phi_0[1,2]= k_x
+    Phi_0[1,3]= k_x
+
+    Phi_0[2,0]=alpha_p
+    Phi_0[2,1]=alpha_p
+    Phi_0[2,2]=-alpha_s
+    Phi_0[2,3]=alpha_s
+
+    Phi_0[3,0]=k_x
+    Phi_0[3,1]=k_x
+    Phi_0[3,2]=-beta_s
+    Phi_0[3,3]=beta_s
+    
+    
+    V_0=np.array([1j*beta_p,-1j*beta_p,1j*beta_s,-1j*beta_s])
+    index=np.argsort(V_0.real)
+     
+    Phi=np.zeros((4,4),dtype=np.complex);
+
+    for i_m in range(0,4):
+        Phi[:,i_m]=Phi_0[:,index[3-i_m]]
+    lambda_=V_0[3-index]
+    
+    Phi_inv=np.linalg.inv(Phi)
+
+    #A_1=np.outer(Phi[:,0],Phi_inv[0,:])
+    
+    Lambda=np.diag([0,1,np.exp((lambda_[2]-lambda_[1])*d),np.exp((lambda_[3]-lambda_[1])*d)])
+    
+
+    alpha_prime=Phi.dot(Lambda).dot(Phi_inv)
+#    print(alpha_prime)
 #
 #
-#    P=Mat.lambda+2*Mat.mu  
-#    delta_P=omega*sqrt(Mat.rho/P)
-#    delta_s=omega*sqrt(Mat.rho/Mat.mu)
+    temp=np.matmul(Phi_inv[0,:],Omega_moins)
 #
-#    beta_P=sqrt(delta_P**2-k_x**2)
-#    beta_s=sqrt(delta_s**2-k_x**2)
-#
-#    alpha_P=-1j*Mat.lambda*delta_P**2-1j*2*Mat.mu*beta_P**2
-#    alpha_s= 2*j*mu*beta_s*k_x;
-#
-#    V_0=np.matrix([1j*beta_P,-1j*beta_P,1j*beta_s,-1j*beta_s]);
-#
-#    Phi_0[0,0)=-2*j*mu*beta_P*k_x;
-#    Phi_0[0,1)=2*j*mu*beta_P*k_x;
-#    Phi_0[0,2)=j*mu*(beta_s^2-k_x^2);
-#    Phi_0[0,3)=j*mu*(beta_s^2-k_x^2);
-#
-#    Phi_0[1,0)= beta_P;
-#    Phi_0[1,1)=-beta_P;
-#    Phi_0[1,2)= k_x;
-#    Phi_0[1,3)= k_x;
-#
-#    Phi_0[2,0)=alpha_P;
-#    Phi_0[2,1)=alpha_P;
-#    Phi_0[2,2)=-alpha_s;
-#    Phi_0[2,3)=alpha_s;
-#
-#    Phi_0[3,0)=k_x;
-#    Phi_0[3,1)=k_x;
-#    Phi_0[3,2)=-beta_s;
-#    Phi_0[3,3)=beta_s;
-#
-#
-#    [a,indice]=sort((real(V_0)));
-#
-#    for i_m=in range(0,3)
-#        Phi(:,i_m)=Phi_0(:,indice(4+1-i_m));
-#        V(i_m,i_m)=V_0(indice(4+1-i_m),indice(4+1-i_m));
-#
-#    lambda_=diag(V);
-#
-#    Phi_inv=inv(Phi);
-#
-#    Phi_1=Phi(:,1);
-#    Psi_1=Phi_inv(1,:);
-#
-#    A_1=Phi_1*Psi_1;
-#    alpha_prime=Phi*diag([0 1 exp((lambda(3)-lambda(2))*d) exp((lambda(4)-lambda(2))*d)])*Phi_inv;
-#
-#
-#    temp=Psi_1*Omega_moins;
-#
-#    A=temp(1);
-#    B=temp(2);
-#
-#
-#    temp=zeros(2,2);
-#    temp(1,1)= exp((lambda(2)-lambda(1))*d)/A;
-#    temp(2,1)=0;
-#
-#    temp(1,2)=-B/A;
-#    temp(2,2)=1;
-#
-#    Omega_plus=[Phi_1 0*Phi_1]+alpha_prime*Omega_moins*temp;
-#
-#    Xi=temp*exp(-lambda(2)*d);
+    A=temp[0]
+    B=temp[1]
+    
+    temp=np.zeros((2,2),dtype=np.complex);  
+    temp[0,0]=np.exp((lambda_[1]-lambda_[0])*d)/A
+    temp[0,1]=-B/A
+    temp[1,1]=1
+    
+    Omega_plus=alpha_prime.dot(Omega_moins).dot(temp)
+    Omega_plus[:,0]+=Phi[:,0]
+
+    Xi=temp*np.exp(-lambda_[1]*d)
+    
+    return (Omega_plus,Xi)

@@ -33,5 +33,11 @@ def Interface_Fluid_Pem(O):
     Omega_moins=np.array([[O[2,0]],[O[4,0]]])+np.dot(np.array([[O[2,1],O[2,2]],[O[4,1],O[4,2]]]),Tau);
     return Tau, Omega_moins
 
-def Interface_Fluid(O):
-    return O
+def Interface_Solid_Fluid(O):
+    
+    Omega_moins=np.zeros((4,2),dtype=np.complex);
+    Omega_moins[1,0]=O[0,0];
+    Omega_moins[2,0]=-O[1,0];
+    Omega_moins[3,1]=1;
+
+    return Omega_moins
