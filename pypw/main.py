@@ -22,30 +22,49 @@
 # copies or substantial portions of the Software.
 #
 
+from matplotlib import pyplot as plt
 import numpy as np
 from transfert_layers import *
 from transfert_interfaces import *
+from pw_resolution import *
+from initialize_omega_n_moins import *
 
-omega=10
-k_x=0 
+freq=1000
+omega=2*np.pi*freq
+ 
 K_air =1.418891313475211e+05
 rho_air =1.204215082737155 
-d=0.1
+d=0.05
+
+
+theta=23
 
 k_air=omega*np.sqrt(rho_air/K_air)
+
+
+k_x=k_air*np.sin(theta*np.pi/180)
 Z_air=np.sqrt(rho_air*K_air)
 
-
-
-Omega_moins=np.array([[0],[1]])     
+Omega_moins=Initialize_Omega_n_moins()   
 
 (Omega_plus,Xi)=  Transfert_Fluid(Omega_moins,omega,k_x,K_air,rho_air,d)
 
-
-
-print(Omega_plus[1]/(1j*omega*Omega_plus[0]))
-
+R_recursive=PW_Resolution(Omega_plus,omega,k_x,K_air,rho_air)
 
 Z_s=-1j*Z_air/np.tan(k_air*d)
-R=(Z_s-Z_air)/(Z_s/Z_air)
+R=(Z_s-Z_air)/(Z_s+Z_air)
+
+print("R_recursive=")
+print(R_recursive)
+print("R_analytique=")
+print(R)
+
+PLANES_Reference=np.loadtxt('../../PLANES/Projects/pypw/out/pypw_101.PW')
+
+plt.figure()
+plt.plot(PLANES_Reference[:,0],PLANES_Reference[:,2],'b')
+plt.plot(PLANES_Reference[:,0],PLANES_Reference[:,3],'r')
+plt.plot(freq,R_recursive.real,'b.')
+plt.plot(freq,R_recursive.imag,'r.')
+plt.show()
 
