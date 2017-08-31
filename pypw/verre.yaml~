@@ -1,9 +1,0 @@
-;; This buffer is for notes you don't want to save, and for Lisp evaluation.
-;; If you want to create a file, visit that file with C-x C-f,
-;; then enter the text in that file's own buffer.
-
-medium_type: elastic
-E: 1.483239380145361e+11
-nu: 0.221253109880929
-rho: 5000
-eta: 0
