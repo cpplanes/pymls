@@ -25,9 +25,10 @@
 from .medium import Medium
 
 
-class Elastic(Medium):
+class Fluid(Medium):
 
     MEDIUM_TYPE = 'fluid'
+    MODEL = MEDIUM_TYPE
     EXPECTED_FIELDS = [
         'rho',  # Density
         'c'  # Sound speed
@@ -39,5 +40,5 @@ class Elastic(Medium):
         self.rho = None
         self.c = None
 
-    def update_frequency(self, frequency):
-        self.frequency = frequency
+    def update_frequency(self, omega):
+        self.omega = omega

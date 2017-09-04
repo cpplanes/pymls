@@ -29,6 +29,9 @@ from .medium import Medium
 
 class Air(Medium):
 
+    MEDIUM_TYPE = 'fluid'
+    MODEL = MEDIUM_TYPE
+
     T = 293.15  # reference temperature [K]
     P = 1.01325e5  # atmospheric Pressure [Pa]
     gamma = 1.400  # polytropic coefficient []

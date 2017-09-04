@@ -32,6 +32,7 @@ from .air import Air
 class EqFluidJCA(Medium):
 
     MEDIUM_TYPE = 'eqf_jca'
+    MODEL = 'pem'
     EXPECTED_PARAMS = [
         'phi',  # Porosity
         'sigma',  # Flow resistivity
@@ -59,9 +60,7 @@ class EqFluidJCA(Medium):
         self.N = None
         self.eta = None
 
-    def update_frequency(self, frequency):
-        self.frequency = frequency
-        omega = 2*np.pi*frequency
+    def update_frequency(self, omega):
 
         #  Johnson et al model for rho_eq_til
         self.omega_0 = self.sigma*self.phi/(Air.rho*self.alpha)

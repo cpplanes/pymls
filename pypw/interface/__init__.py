@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding:utf8 -*-
 #
-# medium.py
+# __init__.py
 #
 # This file is part of pypw, a software distributed under the MIT license.
 # For any question, please contact one of the authors cited below.
@@ -20,29 +20,5 @@
 #
 # The above copyright notice and this permission notice shall be included in all
 # copies or substantial portions of the Software.
+#
 
-
-class Medium(object):
-    """ Holds a medium definition and allows its manipulation and loading """
-
-    EXPECTED_PARAMS = []
-    MEDIUM_TYPE = 'generic'
-    MODEL = ''
-
-    def __init__(self):
-        self.omega = -1
-
-    def update_frequency(self, omega):
-        """ Computes parameters' value for the given circular frequency """
-        pass
-
-    def from_dict(self, parameters):
-        """Reads medium definition from a hashmap of params.
-        Raises a LookupError if the parameter definition is incomplete."""
-
-        for param in self.__class__.EXPECTED_PARAMS:
-            param_value = parameters.get(param)
-            if param_value is None:
-                raise LookupError(f'Unable to find definition of parameter "{param}"')
-            else:
-                setattr(self, param, param_value)

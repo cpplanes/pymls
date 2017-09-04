@@ -28,6 +28,7 @@ from .medium import Medium
 class Elastic(Medium):
 
     MEDIUM_TYPE = 'elastic'
+    MODEL = MEDIUM_TYPE
     EXPECTED_PARAMS = [
         'E',  # Young's modulus
         'nu',  # Poisson ratio
@@ -46,9 +47,9 @@ class Elastic(Medium):
         self.mu = None
 
     def from_dict(self, *a, **kw):
-        super().from_dict(self, *a, **kw)
+        super().from_dict(*a, **kw)
         self.lambda_ = (1+1j*self.eta)*(self.E*self.nu)/((1+self.nu)*(1-2*self.nu))
         self.mu = (1+1j*self.eta)*(self.E)/(2*(1+self.nu))
 
-    def update_frequency(self, frequency):
-        self.frequency = frequency
+    def update_frequency(self, omega):
+        self.omega = omega

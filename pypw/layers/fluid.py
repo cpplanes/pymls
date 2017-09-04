@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding:utf8 -*-
 #
-# pw_resolution.py
+# fluid.py
 #
 # This file is part of pypw, a software distributed under the MIT license.
 # For any question, please contact one of the authors cited below.
@@ -25,10 +25,40 @@
 import numpy as np
 from numpy.lib.scimath import *
 
-def Initialize_Omega_n_plus():
-    """Function which return the reflexion coefficient at the incident interface"""
+
+def transfert_fluid(Omega_moins, omega, k_x, medium, d):
+
+    if medium.MODEL == 'pem':
+        rho = medium.rho_eq
+        c = medium.c_eq
+    elif medium.MODEL == 'fluid':
+        rho = medium.rho
+        c = medium.c
+    else:
+        raise ValueError('Provided material is not a fluid')
+
+    delta = omega/c
+
+    # Eigenvalue of the State Matrix (the other one is -lambda_)
+    lambda_ = -sqrt(k_x**2-delta**2)
+
+    # Matrix of eigenvectors , Eq (A10) in JAP 2013 corrected
+    Phi = np.matrix([
+        [-lambda_/(rho*omega**2), lambda_/(rho*omega**2)],
+        [1, 1]
+    ])
+
+    # Analytical inverse of Phi
+    Psi = (rho*omega**2/(2*lambda_))*np.matrix([
+        [-1, lambda_/(rho*omega**2)],
+        [1, lambda_/(rho*omega**2)]
+    ])
+
+    Omega_plus = Phi[:,0] + np.exp(-2*lambda_*d)*Phi[:,1].dot(Psi[1,:]).dot(Omega_moins) / (Psi[0,:].dot(Omega_moins))
+
+    Xi = np.exp(-lambda_*d)/np.dot(Psi[0,:], Omega_moins)
+
+    return (Omega_plus, Xi)
 
 
-    # For a rigid backing
-    Omega_moins = np.matrix('0;1')
-    return Omega_moins
+
