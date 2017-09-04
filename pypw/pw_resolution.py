@@ -39,5 +39,9 @@ def PW_Resolution(Omega_moins,omega,k_x,K_0,rho_0):
     
     
     temp=np.array([[Omega_moins[0,0],-u_z],[Omega_moins[1,0],-1]])
+    
+    print("temp=")
+    print(temp)
+    
     X=np.linalg.inv(temp).dot(S_fluid)
-    return X[0,0]
+    return X

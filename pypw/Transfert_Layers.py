@@ -44,8 +44,25 @@ def Transfert_Fluid(Omega_moins,omega,k_x,K_eq,rho_eq,d):
     return (Omega_plus,Xi)
 
 
-def Transfert_Elastic(Omega_moins,omega,k_x,Mat,d):
+def Transfert_PEM(Omega_moins,omega,k_x,Mat,d):
+    return 0
+    
 
+
+
+
+def Transfert_Elastic(Omega_moins,omega,k_x,Mat,d):
+    
+    
+    
+#    print(Mat.lambda_)
+#    print(Mat.mu)
+#    print(k_x)
+#
+#    print(Mat.lambda__)
+    
+    
+    
     P_mat=Mat.lambda_+2*Mat.mu  
     delta_p=omega*sqrt(Mat.rho/P_mat)
     delta_s=omega*sqrt(Mat.rho/Mat.mu)
@@ -83,37 +100,82 @@ def Transfert_Elastic(Omega_moins,omega,k_x,Mat,d):
     
     
     V_0=np.array([1j*beta_p,-1j*beta_p,1j*beta_s,-1j*beta_s])
+    
+#    print("V_0")
+#    print(V_0)
+    
     index=np.argsort(V_0.real)
+#    print("index=")
+#    print(index)
      
     Phi=np.zeros((4,4),dtype=np.complex);
+    lambda_=np.zeros((4),dtype=np.complex);
+
 
     for i_m in range(0,4):
         Phi[:,i_m]=Phi_0[:,index[3-i_m]]
-    lambda_=V_0[3-index]
+        lambda_[i_m]=V_0[index[3-i_m]]
     
+#    print("lambda_")
+#    print(lambda_)
+    
+#    print(dfssdf)
+
     Phi_inv=np.linalg.inv(Phi)
 
+#    print("Phi_1=")
+#    print(Phi[:,0])     
+    
     #A_1=np.outer(Phi[:,0],Phi_inv[0,:])
     
     Lambda=np.diag([0,1,np.exp((lambda_[2]-lambda_[1])*d),np.exp((lambda_[3]-lambda_[1])*d)])
-    
+#    print("Lambda=")
+#    print(Lambda)
+ 
 
     alpha_prime=Phi.dot(Lambda).dot(Phi_inv)
-#    print(alpha_prime)
+#    print("alpha_prime") 
+#    print(alpha_prime)    
 #
 #
     temp=np.matmul(Phi_inv[0,:],Omega_moins)
+#    print("temp=")
+#    print(temp)
+
 #
     A=temp[0]
     B=temp[1]
     
     temp=np.zeros((2,2),dtype=np.complex);  
+ 
+#    print("np.exp((lambda_[1]-lambda_[0])*d)")
+#
+#    print(np.exp((lambda_[1]-lambda_[0])*d))
+#    print("A")
+#
+#    print(A)
+
+    
     temp[0,0]=np.exp((lambda_[1]-lambda_[0])*d)/A
     temp[0,1]=-B/A
     temp[1,1]=1
     
+#    print("temp=")
+#    print(temp)
+    
+    
     Omega_plus=alpha_prime.dot(Omega_moins).dot(temp)
     Omega_plus[:,0]+=Phi[:,0]
+
+#    print("Omega_plus")
+#    print(Omega_plus)    
+    
+#    Omega_plus=Omega_plus.dot(temp)
+#    print("Omega_plus")
+#    print(Omega_plus)
+
+    
+    #print(Omega_plus)
 
     Xi=temp*np.exp(-lambda_[1]*d)
     

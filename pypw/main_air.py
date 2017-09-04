@@ -42,14 +42,12 @@ d=0.05
 theta=23
 
 k_0=omega*np.sqrt(rho_0/K_0)
-
-
 k_x=k_0*np.sin(theta*np.pi/180)
 Z_0=np.sqrt(rho_0*K_0)
 
 Omega_moins=Initialize_Omega_n_plus()   
 
-(Omega_plus,Xi)=  Transfert_Fluid(Omega_moins,omega,k_x,K_0,rho_0,d)
+(Omega_plus,Xi)=Transfert_Fluid(Omega_moins,omega,k_x,K_0,rho_0,d)
 
 R_recursive=PW_Resolution(Omega_plus,omega,k_x,K_0,rho_0)
 

@@ -30,7 +30,7 @@ from numpy.lib.scimath import *
 def Initialize_Omega_n_plus():
     
     # For a rigid backing
-    Omega_moins=np.matrix('0;1') 
+    Omega=np.matrix('0;1') 
     
     
     return Omega_moins

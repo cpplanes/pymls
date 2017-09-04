@@ -31,7 +31,7 @@ from initialize_omega_n_plus import *
 from media import from_yaml,Air
 
 
-freq=10
+freq=20
 omega=2*np.pi*freq
 
 c_0=1480 
@@ -41,10 +41,6 @@ K_0 =rho_0*c_0**2
 rho_0 =Air.rho
 K_0 =Air.K
 
-print(rho_0)
-print(K_0)
-print(np.sqrt(K_0/rho_0))
-
 
 
 d=0.5e-3
@@ -52,40 +48,54 @@ d=0.5e-3
 
 
 
-verre=from_yaml('verre.yaml')
+bois=from_yaml('bois.yaml')
 
 
-theta=0
+theta=85
 
 k_0=omega*np.sqrt(rho_0/K_0)
 
 k_x=k_0*np.sin(theta*np.pi/180)
 k_z=sqrt(k_0**2-k_x**2)
 
-#print(k_x)
-#print(k_z)
+
 
 Z_0=np.sqrt(rho_0*K_0)
 
 
-Omega_n_plus=np.array([[-1j*k_z/(rho_0*omega**2)],[1]]);
-#print(Omega_n_plus)
-(Omega_n_moins,Tau)=Interface_Solid_Fluid(Omega_n_plus)
-#print(Omega_n_moins)
+Omega_3_plus=np.array([[-1j*k_z/(rho_0*omega**2)],[1]]);
+#print(Omega_3_plus)
+(Omega_3_moins,Tau)=Interface_Solid_Fluid(Omega_3_plus)
+#print("Omega_3_moins=")
+#print(Omega_3_moins)
 
-(Omega_1_plus,Xi_1)=Transfert_Elastic(Omega_n_moins,omega,k_x,verre,d)
+
+(Omega_2_plus,Xi_1)=Transfert_Elastic(Omega_3_moins,omega,k_x,bois,0.02)
+#print("Omega_2_plus=")
+#print(Omega_2_plus)
+
+(Omega_2_moins,Tau)=Interface_PEM_Solid(Omega_2_plus)
+
+#print("Omega_2_moins=")
+#print(Omega_2_moins)
+
+
+PEM.rho_eq_til=25
+
+
+
 
 #print(Omega_1_plus)
 
-(Omega_0_moins,Tau)=Interface_Fluid_Solid(Omega_1_plus)
+#(Omega_0_moins,Tau)=Interface_Fluid_Solid(Omega_1_plus)
 
-print(Omega_0_moins)
+#print(Omega_0_moins)
 
-R_recursive=PW_Resolution(Omega_0_moins,omega,k_x,K_0,rho_0)
+#R_recursive=PW_Resolution(Omega_0_moins,omega,k_x,K_0,rho_0)
 
 
-print("R_recursive=")
-print(R_recursive)
+#print("R_recursive=")
+#print(R_recursive)
 
 
 

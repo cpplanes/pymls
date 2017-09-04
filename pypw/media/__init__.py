@@ -5,14 +5,14 @@ from .medium import Medium
 from .air import Air
 from .eqf import EqFluidJCA
 from .elastic import Elastic
-from .fluid import Fluid
+#from .fluid import Fluid
 
 
 # TODO: refactor to use Medium.MEDIUMTYPE
 __MEDIUMCLASSES_MAP = {
     'eqf_jca': EqFluidJCA,
     'elastic': Elastic,
-    'fluid': Fluid
+#    'fluid': Fluid
 }
 
 

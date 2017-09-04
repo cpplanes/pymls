@@ -24,9 +24,8 @@
 
 import numpy as np
 
-def Interface_Fluid_Pem(O):
-       
-    a=-np.array([O[1,1],O[1,2]],[O[5,1],O[5,2]]);
+def Interface_Fluid_Pem(O):       
+    a = -np.array([O[1,1],O[1,2]],[O[5,1],O[5,2]]);
     Tau=np.dot(np.linalg.inv(a),np.array([[O[1,0]],[O[5,0]]]));
     Omega_moins=np.array([[O[2,0]],[O[4,0]]])+np.dot(np.array([[O[2,1],O[2,2]],[O[4,1],O[4,2]]]),Tau);
     return (Omega_moins,Tau)
@@ -47,3 +46,21 @@ def Interface_Fluid_Solid(O):
     Omega_moins=np.array([[O[1,1]],[-O[2,1]]])*Tau+np.array([[O[1,0]],[-O[2,0]]]);
 
     return (Omega_moins,Tau)
+
+
+
+def Interface_PEM_Solid(O):
+
+    Omega_moins=np.zeros((6,3),dtype=np.complex);
+    Omega_moins[0,0:1]=O[0,0:1];
+    Omega_moins[1,0:1]=O[1,0:1];
+    Omega_moins[2,0:1]=O[1,0:1];
+    Omega_moins[3,0:1]=O[2,0:1];
+    Omega_moins[3,2]=1;
+    Omega_moins[4,2]=1;
+    Omega_moins[5,0:1]=O[3,0:1];
+    Tau=0
+    return (Omega_moins,Tau)
+
+
+
