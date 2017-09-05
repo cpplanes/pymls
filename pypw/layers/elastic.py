@@ -70,7 +70,6 @@ def transfert_elastic(Omega_moins, omega, k_x, medium, d):
     Phi = np.zeros((4,4), dtype=np.complex);
     lambda_ = np.zeros((4), dtype=np.complex);
 
-
     for i_m in range(0,4):
         Phi[:,i_m] = Phi_0[:,index[3-i_m]]
         lambda_[i_m] = V_0[index[3-i_m]]
@@ -86,9 +85,9 @@ def transfert_elastic(Omega_moins, omega, k_x, medium, d):
 
     alpha_prime = Phi.dot(Lambda).dot(Phi_inv)
 
-    temp = np.matmul(Phi_inv[0,:], Omega_moins)
-    A = temp[0]
-    B = temp[1]
+    xi_prime = np.matmul(Phi_inv[0,:], Omega_moins)
+    A = xi_prime[0]
+    B = xi_prime[1]
 
     temp = np.zeros((2,2), dtype=np.complex)
     temp[0,0] = np.exp((lambda_[1]-lambda_[0])*d)/A
