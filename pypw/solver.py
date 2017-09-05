@@ -92,13 +92,11 @@ class Solver(object):
 
         # load the backing vector to initiate recursion
         Omega_plus = self.backing(omega, k_x)
-
+        
         # goes backward (from last to first layer) and compute successive
         # Omega_plus/minus
-        tau_layers = []
-        xi_layers = []
+        back_prop=np.eye(1)
         for invertedi_L, L in enumerate(self.layers[::-1]):
-
 
             i_L = len(self.layers)-invertedi_L
 
@@ -117,22 +115,20 @@ class Solver(object):
             (Omega_plus, xi) = layer_func(Omega_moins, omega, k_x, self.media.get(L['medium']), L['thickness'])
 
             if self.backing == backing.transmission:
-                tau_layers.append(tau)
-                xi_layers.append(xi)
-
-            print(Omega_plus)
-            print(Omega_moins)
+                back_prop=back_prop.dot(tau).dot(xi)
 
         # last interface
         interface_func = generic_interface(self.media.get(self.layers[0]['medium']), Air)
         if interface_func is not None:
             (Omega_moins, tau) = interface_func(Omega_plus)
+            
         else:
             Omega_moins = Omega_plus
-            tau = None  # TODO
+            tau = np.eye(len(Omega_moins))
 
         if self.backing == backing.transmission:
-            tau_layers.append(tau)
+            back_prop=back_prop.dot(tau)
+
 
         # Solve for the first layer
         k_air = omega*sqrt(Air.rho/Air.K)
@@ -154,10 +150,12 @@ class Solver(object):
         ])
 
         X = np.linalg.inv(temp).dot(S_fluid)
+        
         reflx_coefficient = X[1,0]
+        X_0_moins=X[0,0]
 
         if self.backing == backing.transmission:
-            raise NotImplementedError('implement it if you need it !.. or wait.')
+            trans_coefficient=back_prop*X_0_moins
         else:
             trans_coefficient = None
 

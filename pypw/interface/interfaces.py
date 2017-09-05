@@ -32,8 +32,11 @@ def fluid_pem_interface(O):
         [O[5,1],O[5,2]]
     ])
     Tau = np.dot(np.linalg.inv(a), np.array([[O[1,0]], [O[5,0]]]))
+    Tau_tilde=np.concatenate([np.eye(2),Tau])
+    
     Omega_moins = np.array([[O[2,0]], [O[4,0]]]) + np.dot(np.array([[O[2,1], O[2,2]], [O[4,1], O[4,2]]]), Tau)
-    return (Omega_moins, Tau)
+    
+    return (Omega_moins, Tau_tilde)
 
 
 def elastic_fluid_interface(O):
@@ -42,22 +45,25 @@ def elastic_fluid_interface(O):
     Omega_moins[1,0] = O[0,0]
     Omega_moins[2,0] = -O[1,0]
     Omega_moins[3,1] = 1
-    Tau = np.zeros((4,2), dtype=np.complex)
-
-    return (Omega_moins, Tau)
+    
+    Tau_tilde= np.zeros((1,2), dtype=np.complex)
+    Tau_tilde[0,0]=1
+    
+    return (Omega_moins, Tau_tilde)
 
 
 def fluid_elastic_interface(O):
 
     Tau = -O[0,0]/O[0,1]
     Omega_moins = np.array([[O[1,1]], [-O[2,1]]])*Tau + np.array([[O[1,0]], [-O[2,0]]])
+    Tau_tilde=np.concatenate([np.eye(1,1),np.array([[Tau]])])
 
-    return (Omega_moins, Tau)
+    return (Omega_moins, Tau_tilde)
 
 
 def pem_elastic_interface(O):
 
-    Omega_moins = np.zeros((5,3), dtype=np.complex);
+    Omega_moins = np.zeros((5,3), dtype=np.complex)
     Omega_moins[0,0:1] = O[0,0:1];
     Omega_moins[1,0:1] = O[1,0:1];
     Omega_moins[2,0:1] = O[1,0:1];
@@ -65,5 +71,8 @@ def pem_elastic_interface(O):
     Omega_moins[3,2] = 1;
     Omega_moins[4,2] = 1;
     Omega_moins[5,0:1] = O[3,0:1];
-    Tau = 0
-    return (Omega_moins, Tau)
+    
+    Tau_tilde= np.zeros((2,3), dtype=np.complex)
+    Tau_tilde[0,0]=1
+    Tau_tilde[1,1]=1
+    return (Omega_moins, Tau_tilde)
