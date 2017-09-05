@@ -29,26 +29,26 @@ from pypw.transfert_interfaces import *
 from pypw.pw_resolution import *
 from pypw.initialize_omega_n_plus import *
 from pypw.media import from_yaml, Air
+from pypw.solver import Solver
+import pypw.backing as backing
+
 
 
 freq=20
 omega=2*np.pi*freq
 
-c_0=1480 
-rho_0 =1000 
-K_0 =rho_0*c_0**2
+
 
 rho_0 =Air.rho
 K_0 =Air.K
 
 
 
-d=0.5e-3
+d_bois=2.e-3
 
 
 
-
-bois=from_yaml('bois.yaml')
+bois=from_yaml('materials/bois.yaml')
 
 
 theta=85
@@ -63,24 +63,37 @@ k_z=sqrt(k_0**2-k_x**2)
 Z_0=np.sqrt(rho_0*K_0)
 
 
-Omega_3_plus=np.array([[-1j*k_z/(rho_0*omega**2)],[1]]);
+
+S=Solver()
+S.media={'Air':Air,'Bois':bois}
+S.layers=[{'medium':'Bois','thickness':d_bois}]
+S.backing=backing.transmission
+
+
+
+print(S.solve([20],k_x))
+
+
+
+#
+#Omega_3_plus=np.array([[-1j*k_z/(rho_0*omega**2)],[1]]);
 #print(Omega_3_plus)
-(Omega_3_moins,Tau)=Interface_Solid_Fluid(Omega_3_plus)
+#(Omega_3_moins,Tau)=Interface_Solid_Fluid(Omega_3_plus)
 #print("Omega_3_moins=")
 #print(Omega_3_moins)
-
-
-(Omega_2_plus,Xi_1)=Transfert_Elastic(Omega_3_moins,omega,k_x,bois,0.02)
+#
+#
+#(Omega_2_plus,Xi_1)=Transfert_Elastic(Omega_3_moins,omega,k_x,bois,0.02)
 #print("Omega_2_plus=")
 #print(Omega_2_plus)
-
-(Omega_2_moins,Tau)=Interface_PEM_Solid(Omega_2_plus)
-
+#
+#(Omega_2_moins,Tau)=Interface_PEM_Solid(Omega_2_plus)
+#
 #print("Omega_2_moins=")
 #print(Omega_2_moins)
-
-
-PEM.rho_eq_til=25
+#
+#
+#PEM.rho_eq_til=25
 
 
 
