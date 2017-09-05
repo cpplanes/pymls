@@ -49,8 +49,7 @@ def elastic_fluid_interface(O):
 
 def fluid_elastic_interface(O):
 
-    print(O)
-    Tau = -O[0,0]/O[-1,1]
+    Tau = -O[0,0]/O[0,1]
     Omega_moins = np.array([[O[1,1]], [-O[2,1]]])*Tau + np.array([[O[1,0]], [-O[2,0]]])
 
     return (Omega_moins, Tau)
