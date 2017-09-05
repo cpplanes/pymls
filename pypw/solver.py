@@ -154,7 +154,7 @@ class Solver(object):
         ])
 
         X = np.linalg.inv(temp).dot(S_fluid)
-        reflx_coefficient = X[0,0]
+        reflx_coefficient = X[1,0]
 
         if self.backing == backing.transmission:
             raise NotImplementedError('implement it if you need it !.. or wait.')
