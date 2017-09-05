@@ -43,13 +43,13 @@ def generic_interface(medium_right, medium_left):
         if medium_left.MODEL == 'fluid':
             return None
         if medium_left.MODEL == 'elastic':
-            return fluid_elastic_interface
+            return elastic_fluid_interface
         if medium_left.MODEL == 'pem':
             return fluid_pem_interface
 
     if medium_right.MODEL == 'elastic':
         if medium_left.MODEL == 'fluid':
-            return elastic_fluid_interface
+            return fluid_elastic_interface
         if medium_left.MODEL == 'elastic':
             return None
         if medium_left.MODEL == 'pem':
