@@ -51,10 +51,10 @@ class MediaLoadingTests(unittest.TestCase):
 
     def test_missing_parameter(self):
         params = ['phi', 'sigma', 'alpha', 'Lambda_prime', 'Lambda',
-                  'rho_1', 'nu', 'E', 'N']
+                  'rho_1', 'nu', 'E']
 
         with open(self.yaml_file, 'w') as fh:
-            fh.write('medium_type: eqf_jca\n')
+            fh.write('medium_type: eqf\n')
             for p in params:
                 fh.write(f'{p}: 42\n')
 
@@ -63,10 +63,10 @@ class MediaLoadingTests(unittest.TestCase):
 
     def test_ok_loading_eqf(self):
         params = ['phi', 'sigma', 'alpha', 'Lambda_prime', 'Lambda',
-                  'rho_1', 'nu', 'E', 'N', 'eta']
+                  'rho_1', 'nu', 'E', 'eta']
 
         with open(self.yaml_file, 'w') as fh:
-            fh.write('medium_type: eqf_jca\n')
+            fh.write('medium_type: eqf\n')
             for ii, p in enumerate(params):
                 fh.write(f'{p}: {ii}\n')
 
