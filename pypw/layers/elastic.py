@@ -85,18 +85,16 @@ def transfert_elastic(Omega_moins, omega, k_x, medium, d):
 
     alpha_prime = Phi.dot(Lambda).dot(Phi_inv)
 
-    xi_prime = np.matmul(Phi_inv[0,:], Omega_moins)
-    A = xi_prime[0]
-    B = xi_prime[1]
+    xi_prime = Phi_inv[:1,:] @ Omega_moins
+    xi_prime = np.concatenate([xi_prime, np.array([[0,1]])])  # TODO
+    xi_prime_lambda = np.linalg.inv(xi_prime).dot(np.diag([
+        np.exp((lambda_[1]-lambda_[0])*d),
+        1
+    ]))
 
-    temp = np.zeros((2,2), dtype=np.complex)
-    temp[0,0] = np.exp((lambda_[1]-lambda_[0])*d)/A
-    temp[0,1] = -B/A
-    temp[1,1] = 1
-
-    Omega_plus = alpha_prime.dot(Omega_moins).dot(temp)
+    Omega_plus = alpha_prime.dot(Omega_moins).dot(xi_prime_lambda)
     Omega_plus[:,0] += Phi[:,0]
 
-    Xi = temp*np.exp(-lambda_[1]*d)
+    Xi = xi_prime_lambda*np.exp(-lambda_[1]*d)
 
     return (Omega_plus, Xi)
