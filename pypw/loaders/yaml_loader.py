@@ -65,7 +65,7 @@ class YamlLoader(object):
 
     def from_file(self, filename):
         with open(filename) as fh:
-            self.loaded_yaml = yaml.load()
+            self.loaded_yaml = yaml.load(fh)
 
         self.extract_from_yaml()
 
@@ -88,14 +88,14 @@ class YamlLoader(object):
             raise ValueError('Invalid set of keys in definitions')
 
         for primary_k, primary_v in self.loaded_yaml.items():
-            if not type(primary_v) == EXPECTED_FIELDS[primary_k]['type'][0]:
+            if not type(primary_v) == self.__class__.EXPECTED_FIELDS[primary_k]['type'][0]:
                 raise ValueError(f'Invalid data type in definition of {primary_k}')
             if type(primary_v) == str:
                 continue
 
-            get = lambda _: primary_v.get(_) if  EXPECTED_FIELDS[primary_k]['type'][0] == dict else lambda _: _
+            get = lambda _: primary_v.get(_) if self.__class__.EXPECTED_FIELDS[primary_k]['type'][0] == dict else lambda _: _
             for item in primary_v:
-                if not type(get(item)) == EXPECTED_FIELDS[primary_k]['type'][1]:
+                if not type(get(item)) == self.__class__.EXPECTED_FIELDS[primary_k]['type'][1]:
                     raise ValueError(f'Invalid data type in definition of {primary_k}')
 
                 expected_keys = set(self.__class__.EXPECTED_FIELDS[primary_k]['item_keys'])
@@ -136,17 +136,15 @@ class YamlLoader(object):
                 solver.layers.append(l)
 
         # parse backing specification
-        backing_func = MAP_BACKING.get(loaded_yaml['backing'])
+        backing_func = self.__class__.MAP_BACKING.get(self.loaded_yaml['backing'])
         if backing_func is None:
-            raise ValueError(f"Unkniwn backing type {loaded_yaml['backing']}")
+            raise ValueError(f"Unkniwn backing type {self.loaded_yaml['backing']}")
         else:
             solver.backing = backing_func
-
 
         # parse analysis definitions
         for i_a, a in enumerate(self.loaded_yaml['analysis']):
             # check for a valid set of keys
-            yaml_keys = set(a.keys())
             for typ, expected_keys in self.__class__.KEYS_ANALYSIS:
                 if a['type'] == typ and set(a.keys) != set(expected_keys):
                     raise ValueError(f'Bad analysis definition for analysis {i_a}')
