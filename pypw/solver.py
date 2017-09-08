@@ -103,7 +103,10 @@ class Solver(object):
             if invertedi_L == 0:  # right-most layer
                 interface_func = generic_interface(self.media.get(L['medium']), Air)
             else:
-                interface_func = generic_interface(self.media.get(L['medium']), self.media.get(self.layers[i_L+1]['medium']))
+                interface_func = generic_interface(
+                    self.media.get(L['medium']),
+                    self.media.get(self.layers[i_L+1]['medium'])
+                )
 
             if interface_func is not None:
                 (Omega_moins, tau) = interface_func(Omega_plus)
@@ -118,10 +121,10 @@ class Solver(object):
                 back_prop = back_prop.dot(tau).dot(xi)
 
         # last interface
-        interface_func = generic_interface(self.media.get(self.layers[0]['medium']), Air)
+        interface_func = generic_interface(Air, self.media.get(self.layers[0]['medium']))
         if interface_func is not None:
             (Omega_moins, tau) = interface_func(Omega_plus)
-            
+
         else:
             Omega_moins = Omega_plus
             tau = np.eye(len(Omega_moins))
