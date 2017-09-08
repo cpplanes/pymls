@@ -138,21 +138,20 @@ class Solver(object):
         u_z = 1j*k_z/(Air.rho*omega**2)
 
         Omega_0_fluid = np.matrix([
-            [u_z],
-            [1]
-        ]);
-        S_fluid=np.matrix([
+            [-u_z],
+            [-1]
+        ])
+        S_fluid = np.matrix([
             [-u_z],
             [1]
-        ]);
-
-        temp=np.array([
-            [Omega_moins[0,0], -u_z],
-            [Omega_moins[1,0], -1]
         ])
 
+        temp = np.array([
+            [Omega_moins[0,0], Omega_0_fluid[0,0]],
+            [Omega_moins[1,0], Omega_0_fluid[1,0]]
+        ])
         X = np.linalg.inv(temp).dot(S_fluid)
-        
+
         reflx_coefficient = X[1,0]
         X_0_moins = X[0,0]
 
