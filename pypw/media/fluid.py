@@ -30,8 +30,8 @@ class Fluid(Medium):
     MEDIUM_TYPE = 'fluid'
     MODEL = MEDIUM_TYPE
     EXPECTED_FIELDS = [
-        'rho',  # Density
-        'c'  # Sound speed
+        ('rho', float),  # Density
+        ('c', float),  # Sound speed
     ]
 
     def __init__(self):

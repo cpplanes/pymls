@@ -30,10 +30,10 @@ class Elastic(Medium):
     MEDIUM_TYPE = 'elastic'
     MODEL = MEDIUM_TYPE
     EXPECTED_PARAMS = [
-        'E',  # Young's modulus
-        'nu',  # Poisson ratio
-        'rho',  # Density
-        'eta'  # loss factor
+        ('E', float),  # Young's modulus
+        ('nu', float),  # Poisson ratio
+        ('rho', float),  # Density
+        ('eta', float),  # loss factor
     ]
 
     def __init__(self):
@@ -48,6 +48,9 @@ class Elastic(Medium):
 
     def from_dict(self, *a, **kw):
         super().from_dict(*a, **kw)
+
+    def _compute_missing(self):
+
         self.lambda_ = (1+1j*self.eta)*(self.E*self.nu)/((1+self.nu)*(1-2*self.nu))
         self.mu = (1+1j*self.eta)*(self.E)/(2*(1+self.nu))
 

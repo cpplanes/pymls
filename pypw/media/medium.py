@@ -36,13 +36,18 @@ class Medium(object):
         """ Computes parameters' value for the given circular frequency """
         pass
 
+    def _compute_missing(self):
+        pass
+
     def from_dict(self, parameters):
         """Reads medium definition from a hashmap of params.
         Raises a LookupError if the parameter definition is incomplete."""
 
-        for param in self.__class__.EXPECTED_PARAMS:
+        for param, param_type in self.__class__.EXPECTED_PARAMS:
             param_value = parameters.get(param)
             if param_value is None:
                 raise LookupError(f'Unable to find definition of parameter "{param}"')
             else:
-                setattr(self, param, param_value)
+                setattr(self, param, param_type(param_value))
+
+        self._compute_missing()

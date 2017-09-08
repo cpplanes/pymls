@@ -31,19 +31,18 @@ from .air import Air
 
 class EqFluidJCA(Medium):
 
-    MEDIUM_TYPE = 'eqf_jca'
-    MODEL = 'pem'
+    MEDIUM_TYPE = 'eqf'
+    MODEL = 'fluid'
     EXPECTED_PARAMS = [
-        'phi',  # Porosity
-        'sigma',  # Flow resistivity
-        'alpha',  # Tortuosity
-        'Lambda_prime',  # Thermal characteristic length
-        'Lambda',  # Viscous characteristic length
-        'rho_1',  # Mass of solid per unit volume of aggregate
-        'nu',  # poisson ratio
-        'E',  # Young's modulus
-        'N',  # Shear modulus
-        'eta'  # viscosity
+        ('phi', float),  # Porosity
+        ('sigma', float),  # Flow resistivity
+        ('alpha', float),  # Tortuosity
+        ('Lambda_prime', float),  # Thermal characteristic length
+        ('Lambda', float),  # Viscous characteristic length
+        ('rho_1', float),  # Mass of solid per unit volume of aggregate
+        ('nu', float),  # poisson ratio
+        ('E', float),  # Young's modulus
+        ('eta', float)  # viscosity
     ]
 
     def __init__(self):
@@ -59,6 +58,9 @@ class EqFluidJCA(Medium):
         self.E = None
         self.N = None
         self.eta = None
+
+    def _compute_missing(self):
+        self.N = 0.5*self.E/(1+self.nu);
 
     def update_frequency(self, omega):
 
