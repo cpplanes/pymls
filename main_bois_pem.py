@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding:utf8 -*-
 #
-# pw_resolution.py
+# main_pem_bois.py
 #
 # This file is part of pypw, a software distributed under the MIT license.
 # For any question, please contact one of the authors cited below.
@@ -22,26 +22,52 @@
 # copies or substantial portions of the Software.
 #
 
+from matplotlib import pyplot as plt
 import numpy as np
-from numpy.lib.scimath import *
+from numpy.lib.scimath import sqrt
 
-# Function which return the reflexion coefficient at the incident interface
+from pypw.media import from_yaml, Air
+from pypw.solver import Solver
+import pypw.backing as backing
 
-def PW_Resolution(Omega_moins,omega,k_x,K_0,rho_0):
-    
-    
-    k_0=omega*sqrt(rho_0/K_0)
-    k_z=sqrt(k_0**2-k_x**2)
-    u_z=1j*k_z/(rho_0*omega**2)
-    
-    Omega_0_fluid=np.matrix([[u_z],[1]]);
-    S_fluid=np.matrix([[-u_z],[1]]);
-    
-    
-    temp=np.array([[Omega_moins[0,0],-u_z],[Omega_moins[1,0],-1]])
-    
-    print("temp=")
-    print(temp)
-    
-    X=np.linalg.inv(temp).dot(S_fluid)
-    return X
+
+freq=20
+omega=2*np.pi*freq
+d_pem=200e-3
+d_wood=2e-2
+theta=30
+
+foam = from_yaml('materials/foam2.yaml')
+wood = from_yaml('materials/bois.yaml')
+
+k_air = omega/Air.c
+
+k_x = k_air*np.sin(theta*np.pi/180)
+k_z = sqrt(k_air**2-k_x**2)
+
+S = Solver()
+S.media = {
+    'air': Air,
+    'foam': foam,
+    'wood': wood,
+}
+S.layers = [
+    {
+        'medium': 'wood',
+        'thickness': d_wood,
+    },
+    {
+        'medium': 'foam',
+        'thickness': d_pem,
+    },
+]
+S.backing = backing.rigid
+
+result = S.solve([freq], k_x)
+R_recursive = result['R'][0]
+
+print("R_recursive=")
+print(R_recursive)
+#
+
+

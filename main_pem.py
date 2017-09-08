@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding:utf8 -*-
 #
-# pw_resolution.py
+# main_pem.py
 #
 # This file is part of pypw, a software distributed under the MIT license.
 # For any question, please contact one of the authors cited below.
@@ -23,12 +23,40 @@
 #
 
 import numpy as np
-from numpy.lib.scimath import *
+from numpy.lib.scimath import sqrt
 
-def Initialize_Omega_n_plus():
-    """Function which return the reflexion coefficient at the incident interface"""
+from pypw.media import from_yaml, Air
+from pypw.solver import Solver
+import pypw.backing as backing
 
 
-    # For a rigid backing
-    Omega_moins = np.matrix('0;1')
-    return Omega_moins
+freq = 20
+omega = 2*np.pi*freq
+d = 200e-3
+theta = 30
+
+foam = from_yaml('materials/foam2.yaml')
+
+k_air = omega/Air.c
+
+k_x = k_air*np.sin(theta*np.pi/180)
+k_z = sqrt(k_air**2-k_x**2)
+
+S = Solver()
+S.media = {
+    'air': Air,
+    'foam': foam,
+}
+S.layers = [
+    {
+        'medium': 'foam',
+        'thickness': d,
+    },
+]
+S.backing = backing.rigid
+
+result = S.solve([freq], k_x)
+R_recursive = result['R'][0]
+
+print("R_recursive=")
+print(R_recursive)
