@@ -92,30 +92,30 @@ class Solver(object):
 
         # load the backing vector to initiate recursion
         Omega_plus = self.backing(omega, k_x)
-        
+
         # goes backward (from last to first layer) and compute successive
         # Omega_plus/minus
-        back_prop=np.eye(1)
+        back_prop = np.eye(1)
         for invertedi_L, L in enumerate(self.layers[::-1]):
 
-            i_L = len(self.layers)-invertedi_L
+            i_L = len(self.layers)-invertedi_L-1
 
             if invertedi_L == 0:  # right-most layer
-                interface_func = generic_interface(Air, self.media.get(L['medium']))
+                interface_func = generic_interface(self.media.get(L['medium']), Air)
             else:
-                interface_func = generic_interface(self.media.get(self.layers[i_L+1]['medium']), self.media.get(L['medium']))
+                interface_func = generic_interface(self.media.get(L['medium']), self.media.get(self.layers[i_L+1]['medium']))
 
             if interface_func is not None:
                 (Omega_moins, tau) = interface_func(Omega_plus)
             else:
                 Omega_moins = Omega_plus
-                tau = None  # TODO
+                tau = np.eye(len(Omega_moins))
 
             layer_func = generic_layer(self.media.get(L['medium']))
             (Omega_plus, xi) = layer_func(Omega_moins, omega, k_x, self.media.get(L['medium']), L['thickness'])
 
             if self.backing == backing.transmission:
-                back_prop=back_prop.dot(tau).dot(xi)
+                back_prop = back_prop.dot(tau).dot(xi)
 
         # last interface
         interface_func = generic_interface(self.media.get(self.layers[0]['medium']), Air)
@@ -127,8 +127,7 @@ class Solver(object):
             tau = np.eye(len(Omega_moins))
 
         if self.backing == backing.transmission:
-            back_prop=back_prop.dot(tau)
-
+            back_prop = back_prop.dot(tau)
 
         # Solve for the first layer
         k_air = omega*sqrt(Air.rho/Air.K)
@@ -152,10 +151,10 @@ class Solver(object):
         X = np.linalg.inv(temp).dot(S_fluid)
         
         reflx_coefficient = X[1,0]
-        X_0_moins=X[0,0]
+        X_0_moins = X[0,0]
 
         if self.backing == backing.transmission:
-            trans_coefficient=back_prop*X_0_moins
+            trans_coefficient = back_prop*X_0_moins
         else:
             trans_coefficient = None
 
