@@ -22,7 +22,6 @@
 # copies or substantial portions of the Software.
 #
 
-import numpy as np
 from numpy.lib.scimath import sqrt
 
 from .eqf import EqFluidJCA
@@ -55,7 +54,7 @@ class PEM(EqFluidJCA):
 
         self.lambda_ = self.E*self.nu/((1+self.nu)*(1-2*self.nu))
         self.mu = self.E/(2*(1+self.nu))
-        self.N = 0.5*self.E/(1+self.nu);
+        self.N = 0.5*self.E/(1+self.nu)
 
         self.rho_12 = -self.phi*Air.rho*(self.alpha-1)
         self.rho_11 = self.rho_1-self.rho_12
@@ -120,4 +119,3 @@ class PEM(EqFluidJCA):
         self.mu_1 = mu_1
         self.mu_2 = mu_2
         self.mu_3 = mu_3
-

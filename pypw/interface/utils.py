@@ -30,7 +30,6 @@ from .interfaces import\
     pem_fluid_interface,\
     elastic_pem_interface,\
     pem_elastic_interface
-from ..media import *
 
 
 def generic_interface(medium_left, medium_right):

@@ -22,7 +22,6 @@
 # copies or substantial portions of the Software.
 #
 
-import numpy as np
 from numpy.lib.scimath import sqrt
 
 from .medium import Medium
@@ -60,7 +59,7 @@ class EqFluidJCA(Medium):
         self.eta = None
 
     def _compute_missing(self):
-        self.N = 0.5*self.E/(1+self.nu);
+        self.N = 0.5*self.E/(1+self.nu)
 
     def update_frequency(self, omega):
 

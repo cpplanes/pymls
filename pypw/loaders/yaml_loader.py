@@ -51,12 +51,12 @@ class YamlLoader(object):
     }
 
     KEYS_ANALYSIS = {
-        'frequency' : ['type', 'value'],
-        'range' : ['type', 'start', 'end', 'step'],
+        'frequency': ['type', 'value'],
+        'range': ['type', 'start', 'end', 'step'],
     }
 
     MAP_BACKING = {
-        'rigid' : rigid,
+        'rigid': rigid,
         'transmission': transmission
     }
 

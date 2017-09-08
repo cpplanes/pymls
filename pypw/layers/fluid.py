@@ -23,7 +23,7 @@
 #
 
 import numpy as np
-from numpy.lib.scimath import *
+from numpy.lib.scimath import sqrt
 
 
 def transfert_fluid(Omega_moins, omega, k_x, medium, d):
@@ -59,6 +59,3 @@ def transfert_fluid(Omega_moins, omega, k_x, medium, d):
     Xi = np.exp(-lambda_*d)/np.dot(Psi[0,:], Omega_moins)
 
     return (Omega_plus, Xi)
-
-
-

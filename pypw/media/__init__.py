@@ -1,7 +1,6 @@
 import os
 import yaml
 
-from .medium import Medium
 from .air import Air
 from .eqf import EqFluidJCA
 from .elastic import Elastic

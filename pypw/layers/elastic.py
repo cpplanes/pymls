@@ -23,7 +23,7 @@
 #
 
 import numpy as np
-from numpy.lib.scimath import *
+from numpy.lib.scimath import sqrt
 
 
 def transfert_elastic(Omega_moins, omega, k_x, medium, d):
@@ -67,8 +67,8 @@ def transfert_elastic(Omega_moins, omega, k_x, medium, d):
     ])
     index = np.argsort(V_0.real)
 
-    Phi = np.zeros((4,4), dtype=np.complex);
-    lambda_ = np.zeros((4), dtype=np.complex);
+    Phi = np.zeros((4,4), dtype=np.complex)
+    lambda_ = np.zeros((4), dtype=np.complex)
 
     for i_m in range(0,4):
         Phi[:,i_m] = Phi_0[:,index[3-i_m]]

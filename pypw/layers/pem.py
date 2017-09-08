@@ -1,7 +1,7 @@
 #
 
 import numpy as np
-from numpy.lib.scimath import *
+from numpy.lib.scimath import sqrt
 
 
 def transfert_pem(Omega_moins, omega, k_x, medium, d):
@@ -55,7 +55,6 @@ def transfert_pem(Omega_moins, omega, k_x, medium, d):
     Phi_0[5,3] = k_x
     Phi_0[5,4] = -beta_3
     Phi_0[5,5] = beta_3
-
 
     V_0 = np.array([
         1j*beta_1,

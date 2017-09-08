@@ -26,6 +26,7 @@ import numpy as np
 from numpy.lib.scimath import sqrt
 from pypw.media import Air
 
+
 def rigid(omega, k_x):
 
     return np.matrix([
@@ -33,10 +34,11 @@ def rigid(omega, k_x):
         [1]
     ])
 
+
 def transmission(omega, k_x):
     k_air = omega/Air.c
     k_z = sqrt(k_air**2-k_x**2)
     return np.array([
         [-1j*k_z/(Air.rho*omega**2)],
         [1]
-    ]);
+    ])

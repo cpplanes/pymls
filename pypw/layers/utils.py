@@ -22,10 +22,10 @@
 # copies or substantial portions of the Software.
 #
 
-
 from .fluid import transfert_fluid
 from .elastic import transfert_elastic
 from .pem import transfert_pem
+
 
 def generic_layer(medium):
     if medium.MODEL == 'fluid':
@@ -36,5 +36,3 @@ def generic_layer(medium):
         return transfert_elastic
     else:
         raise ValueError('Unknown MODEL for propagation in medium')
-
-
