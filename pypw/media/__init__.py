@@ -8,12 +8,8 @@ from .pem import PEM
 from .fluid import Fluid
 
 
-# TODO: refactor to use Medium.MEDIUMTYPE
 __MEDIUMCLASSES_MAP = {
-    'eqf': EqFluidJCA,
-    'elastic': Elastic,
-    'fluid': Fluid,
-    'pem': PEM
+    _.MEDIUM_TYPE: _ for _ in [EqFluidJCA, Elastic, PEM, Fluid]
 }
 
 
