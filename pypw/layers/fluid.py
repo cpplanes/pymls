@@ -28,10 +28,10 @@ from numpy.lib.scimath import *
 
 def transfert_fluid(Omega_moins, omega, k_x, medium, d):
 
-    if medium.MODEL == 'pem':
+    if medium.MEDIUM_TYPE == 'eqf':
         rho = medium.rho_eq
         c = medium.c_eq
-    elif medium.MODEL == 'fluid':
+    elif medium.MEDIUM_TYPE == 'fluid':
         rho = medium.rho
         c = medium.c
     else:

@@ -25,13 +25,16 @@
 
 from .fluid import transfert_fluid
 from .elastic import transfert_elastic
+from .pem import transfert_pem
 
 def generic_layer(medium):
     if medium.MODEL == 'fluid':
         return transfert_fluid
-    if medium.MODEL == 'pem' and medium.MEDIUM_TYPE.startswith('eqf'):
-        return transfert_fluid
-    if medium.MODEL == 'elastic':
+    elif medium.MODEL == 'pem':
+        return transfert_pem
+    elif medium.MODEL == 'elastic':
         return transfert_elastic
+    else:
+        raise ValueError('Unknown MODEL for propagation in medium')
 
 

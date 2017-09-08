@@ -26,11 +26,14 @@
 from .interfaces import\
     fluid_elastic_interface,\
     elastic_fluid_interface,\
-    fluid_pem_interface
+    fluid_pem_interface,\
+    pem_fluid_interface,\
+    elastic_pem_interface,\
+    pem_elastic_interface
 from ..media import *
 
 
-def generic_interface(medium_right, medium_left):
+def generic_interface(medium_left, medium_right):
     """
     Returns a callable to the interface function corresponding to the
     two given media.
@@ -39,21 +42,26 @@ def generic_interface(medium_right, medium_left):
     generic_interface(m2, m1) ).
     """
 
-    if medium_right.MODEL == 'fluid':
-        if medium_left.MODEL == 'fluid':
+    if medium_left.MODEL == 'fluid':
+        if medium_right.MODEL == 'fluid':
             return None
-        if medium_left.MODEL == 'elastic':
-            return elastic_fluid_interface
-        if medium_left.MODEL == 'pem':
+        if medium_right.MODEL == 'elastic':
+            return fluid_elastic_interface
+        if medium_right.MODEL == 'pem':
             return fluid_pem_interface
 
-    if medium_right.MODEL == 'elastic':
-        if medium_left.MODEL == 'fluid':
-            return fluid_elastic_interface
-        if medium_left.MODEL == 'elastic':
+    if medium_left.MODEL == 'elastic':
+        if medium_right.MODEL == 'fluid':
+            return elastic_fluid_interface
+        if medium_right.MODEL == 'elastic':
             return None
-        if medium_left.MODEL == 'pem':
-            raise NotImplementedError
+        if medium_right.MODEL == 'pem':
+            return elastic_pem_interface
 
-    if medium_right.MODEL == 'pem':
-        raise NotImplementedError
+    if medium_left.MODEL == 'pem':
+        if medium_right.MODEL == 'fluid':
+            return pem_fluid_interface
+        if medium_right.MODEL == 'elastic':
+            return pem_elastic_interface
+        if medium_right.MODEL == 'pem':
+            return None
