@@ -45,14 +45,26 @@ class Solver(object):
     All post-processing should be done *out* of this class
     """
 
-    def __init__(self, media=None, analysis=None, layers=None, backing=None):
+    def __init__(self, media=[], analyses=[], layers=[], backing=None):
         self.media = media
-        self.analysis = analysis
         self.layers = layers
         self.backing = backing
+        self.analyses = analyses if type(analyses) == list else [analyses]
+        self.resultset = []
 
-    def is_complete(self):
+    def check_is_complete(self):
         """ Checks that all the required data has been provided. """
+        # not empty layer list
+        if not self.layers:
+            raise IncompleteDefinitionError("Empty layer list")
+
+        # if media are missing, grab them from the layers list
+        missing_media = {l.medium for l in self.layers} - set(self.media)
+        self.media += list(missing_media)
+
+        if not self.backing in [backing.transmission, backing.rigid]:
+            raise IncompleteDefinitionError('No backing provided')
+
         return True
 
     def solve(self, frequency=None, k_x=0):
