@@ -24,36 +24,21 @@
 
 import numpy as np
 
-from pypw.media import from_yaml, Air
-from pypw.solver import Solver
-import pypw.backing as backing
+from pypw import from_yaml, Solver, Layer, backing
 
 
 freq = 10
-omega = 2*np.pi*freq
 d = 0.5e-3
 theta = 10
 
 glass = from_yaml('materials/verre.yaml')
 
-k_air = omega*np.sqrt(Air.rho/Air.K)
-k_x = k_air*np.sin(theta*np.pi/180)
-
 S = Solver()
-S.media = {
-    'air': Air,
-    'glass': glass,
-}
-S.layers = [
-    {
-        'medium': 'glass',
-        'thickness': d,
-    },
-]
+S.layers = [Layer(glass, d)]
 S.backing = backing.transmission
 
-result = S.solve([freq], k_x)
-R_recursive = result['R'][0]
+result = S.solve(freq, theta)
+R_recursive = result[0]['R'][0]
 
 print("R_recursive=")
 print(R_recursive)

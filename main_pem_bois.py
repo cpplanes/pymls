@@ -25,13 +25,10 @@
 import numpy as np
 from numpy.lib.scimath import sqrt
 
-from pypw.media import from_yaml, Air
-from pypw.solver import Solver
-import pypw.backing as backing
+from pypw import from_yaml, Solver, Layer, backing
 
 
 freq = 20
-omega = 2*np.pi*freq
 d_pem = 200e-3
 d_wood = 2e-2
 theta = 30
@@ -39,31 +36,15 @@ theta = 30
 foam = from_yaml('materials/foam2.yaml')
 wood = from_yaml('materials/bois.yaml')
 
-k_air = omega/Air.c
-
-k_x = k_air*np.sin(theta*np.pi/180)
-k_z = sqrt(k_air**2-k_x**2)
-
 S = Solver()
-S.media = {
-    'air': Air,
-    'foam': foam,
-    'wood': wood,
-}
 S.layers = [
-    {
-        'medium': 'foam',
-        'thickness': d_pem,
-    },
-    {
-        'medium': 'wood',
-        'thickness': d_wood,
-    },
+    Layer(foam, d_pem),
+    Layer(wood, d_wood),
 ]
 S.backing = backing.rigid
 
-result = S.solve([freq], k_x)
-R_recursive = result['R'][0]
+result = S.solve(freq, theta)
+R_recursive = result[0]['R'][0]
 
 print("R_recursive=")
 print(R_recursive)

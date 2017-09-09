@@ -25,9 +25,8 @@
 from matplotlib import pyplot as plt
 import numpy as np
 
+from pypw import Solver, Layer, backing
 from pypw.media import Air
-from pypw.solver import Solver
-import pypw.backing as backing
 
 freq = 1000
 omega = 2*np.pi*freq
@@ -40,17 +39,11 @@ k_x = k_air*np.sin(theta*np.pi/180)
 
 
 S = Solver()
-S.media = {'air': Air}
-S.layers = [
-    {
-        'medium': 'air',
-        'thickness': d,
-    },
-]
+S.layers = [Layer(Air, d)]
 S.backing = backing.rigid
 
-result = S.solve(freq, k_x)
-R_recursive = result['R'][0]
+result = S.solve(freq, theta)
+R_recursive = result[0]['R'][0]
 
 Z_s = -1j*Air.Z/np.tan(k_air*d)
 R = (Z_s-Air.Z)/(Z_s+Air.Z)

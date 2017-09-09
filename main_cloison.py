@@ -24,23 +24,20 @@
 
 import numpy as np
 
-from pypw.media import from_yaml, Air
-from pypw.solver import Solver
-import pypw.backing as backing
+from pypw import from_yaml, Solver, Layer, backing
 
 freq = 20
-omega = 2*np.pi*freq
 d_bois = 2.e-3
 theta = 85
 
 bois = from_yaml('materials/bois.yaml')
 
-k_air = omega*np.sqrt(Air.rho/Air.K)
-k_x = k_air*np.sin(theta*np.pi/180)
-
 S = Solver()
-S.media = {'Air': Air,'Bois': bois}
-S.layers = [{'medium': 'Bois','thickness': d_bois}]
+S.layers = [Layer(bois, d_bois)]
 S.backing = backing.transmission
 
-print(S.solve([20], k_x))
+result = S.solve(20, theta)
+R_recursive = result[0]['R'][0]
+
+print("R_recursive=")
+print(R_recursive)
