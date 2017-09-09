@@ -25,10 +25,11 @@
 import numpy as np
 from numpy.lib.scimath import sqrt
 
-from .interface.utils import generic_interface
-from .layers.utils import generic_layer
+from pypw.analysis import Analysis
+from pypw.interface.utils import generic_interface
+from pypw.layers import generic_layer
 import pypw.backing as backing
-from .media import Air
+from pypw.media import Air
 
 
 class IncompleteDefinitionError(Exception):
@@ -67,33 +68,30 @@ class Solver(object):
 
         return True
 
-    def solve(self, frequency=None, k_x=0):
-        if not self.is_complete():
-            raise IncompleteDefinitionError
+    def solve(self, frequencies=None, angles=0):
+        self.check_is_complete()
 
-        if frequency is None:
-            for a in self.analysis:
-                if a['type'] == 'frequency':
-                    self.results.append(self.solve([a['value']], k_x))
-                elif a['type'] == 'range':
-                    frequencies = np.arange(a['start'], a['end'], a['step']).tolist()
-                    self.results.append(self.solve(frequencies, k_x))
+        if frequencies is not None:
+            self.analyses.append(Analysis('auto', frequencies, angles))
 
-        elif type(frequency) != list:
-            frequency = [frequency]
+        for a in self.analyses:
+            result = {
+                'name': a.name,
+                'f': [],
+                'angle': [],
+                'R': [],
+                'T': [],
+            }
+            for f, angle in a:
+                (R, T) = self.__solve_one_frequency(f, angle)
+                result['f'].append(f)
+                result['angle'].append(angle)
+                result['R'].append(R)
+                if T is not None:
+                    result['T'].append(T)
+            self.resultset.append(result)
 
-        result = {'f': [], 'R': [], 'T': []}
-        for f in frequency:
-            (R, T) = self.__solve_one_frequency(f, k_x)
-            result['f'].append(f)
-            result['R'].append(R)
-            if T is not None:
-                result['T'].append(T)
-
-        if len(result['T']) == 0:
-            del result['T']
-
-        return result
+        return self.resultset
 
     def __solve_one_frequency(self, frequency, theta_inc):
 
