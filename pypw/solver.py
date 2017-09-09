@@ -83,12 +83,15 @@ class Solver(object):
 
         return result
 
-    def __solve_one_frequency(self, frequency, k_x):
+    def __solve_one_frequency(self, frequency, theta_inc):
 
         omega = frequency*2*np.pi
 
         for m in self.media:
-            self.media[m].update_frequency(omega)
+            m.update_frequency(omega)
+
+        # compute k_x
+        k_x = omega/Air.c*np.sin(theta_inc*np.pi/180)
 
         # load the backing vector to initiate recursion
         Omega_plus = self.backing(omega, k_x)
@@ -101,11 +104,11 @@ class Solver(object):
             i_L = len(self.layers)-invertedi_L-1
 
             if invertedi_L == 0:  # right-most layer
-                interface_func = generic_interface(self.media.get(L['medium']), Air)
+                interface_func = generic_interface(L.medium, Air)
             else:
                 interface_func = generic_interface(
-                    self.media.get(L['medium']),
-                    self.media.get(self.layers[i_L+1]['medium'])
+                    L.medium,
+                    self.layers[i_L+1].medium
                 )
 
             if interface_func is not None:
@@ -114,14 +117,14 @@ class Solver(object):
                 Omega_moins = Omega_plus
                 tau = np.eye(len(Omega_moins))
 
-            layer_func = generic_layer(self.media.get(L['medium']))
-            (Omega_plus, xi) = layer_func(Omega_moins, omega, k_x, self.media.get(L['medium']), L['thickness'])
+            layer_func = generic_layer(L.medium)
+            (Omega_plus, xi) = layer_func(Omega_moins, omega, k_x, L.medium, L.thickness)
 
             if self.backing == backing.transmission:
                 back_prop = back_prop.dot(tau).dot(xi)
 
         # last interface
-        interface_func = generic_interface(Air, self.media.get(self.layers[0]['medium']))
+        interface_func = generic_interface(Air, self.layers[0].medium)
         if interface_func is not None:
             (Omega_moins, tau) = interface_func(Omega_plus)
 
