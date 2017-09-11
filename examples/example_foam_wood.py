@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding:utf8 -*-
 #
-# main.py
+# main_pem_bois.py
 #
 # This file is part of pypw, a software distributed under the MIT license.
 # For any question, please contact one of the authors cited below.
@@ -22,42 +22,27 @@
 # copies or substantial portions of the Software.
 #
 
-from matplotlib import pyplot as plt
-import numpy as np
+import sys
+sys.path.append('../')
 
-from pypw import Solver, Layer, backing
-from pypw.media import Air
+from pypw import from_yaml, Solver, Layer, backing
 
-freq = 1000
-omega = 2*np.pi*freq
+freq = 20
+d_pem = 200e-3
+d_wood = 2e-2
+theta = 30
 
-d = 0.05
-theta = 0
-
-k_air = omega*np.sqrt(Air.rho/Air.K)
-k_x = k_air*np.sin(theta*np.pi/180)
-
+foam = from_yaml('materials/foam2.yaml')
+wood = from_yaml('materials/wood.yaml')
 
 S = Solver()
-S.layers = [Layer(Air, d)]
+S.layers = [
+    Layer(foam, d_pem),
+    Layer(wood, d_wood),
+]
 S.backing = backing.rigid
 
 result = S.solve(freq, theta)
-R_recursive = result[0]['R'][0]
+R_pypw = result[0]['R'][0]
 
-Z_s = -1j*Air.Z/np.tan(k_air*d)
-R = (Z_s-Air.Z)/(Z_s+Air.Z)
-
-print("R_recursive=")
-print(R_recursive)
-print("R_analytique=")
-print(R)
-
-# PLANES_Reference=np.loadtxt('../../PLANES/Projects/pypw/out/pypw_101.PW')
-
-# plt.figure()
-# plt.plot(PLANES_Reference[:,0],PLANES_Reference[:,2],'b')
-# plt.plot(PLANES_Reference[:,0],PLANES_Reference[:,3],'r')
-# plt.plot(freq,R_recursive.real, 'b.')
-# plt.plot(freq,R_recursive.imag, 'r.')
-# plt.show()
+print("pypw: R = ", R_pypw)

@@ -22,23 +22,32 @@
 # copies or substantial portions of the Software.
 #
 
+import sys
+sys.path.append('../')
+
 import numpy as np
 
-from pypw import from_yaml, Solver, Layer, backing
+from pypw import Solver, Layer, backing
+from pypw.media import Air
 
+freq = 1000
+omega = 2*np.pi*freq
 
-freq = 10
-d = 0.5e-3
-theta = 10
+d = 0.05
+theta = 0
 
-glass = from_yaml('materials/verre.yaml')
+# Analytical solution
+k_air = omega*np.sqrt(Air.rho/Air.K)
+Z_s = -1j*Air.Z/np.tan(k_air*d)
+R_analytical = (Z_s-Air.Z)/(Z_s+Air.Z)
 
+# Solution using pypw
 S = Solver()
-S.layers = [Layer(glass, d)]
-S.backing = backing.transmission
+S.layers = [Layer(Air, d)]
+S.backing = backing.rigid
 
 result = S.solve(freq, theta)
-R_recursive = result[0]['R'][0]
+R_pypw = result[0]['R'][0]
 
-print("R_recursive=")
-print(R_recursive)
+print('Analytical : R = ', R_analytical)
+print('pypw : R = ', R_pypw)

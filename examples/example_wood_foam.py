@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding:utf8 -*-
 #
-# main.py
+# main_pem_bois.py
 #
 # This file is part of pypw, a software distributed under the MIT license.
 # For any question, please contact one of the authors cited below.
@@ -22,22 +22,30 @@
 # copies or substantial portions of the Software.
 #
 
-import numpy as np
+import sys
+sys.path.append('../')
 
 from pypw import from_yaml, Solver, Layer, backing
 
 freq = 20
-d_bois = 2.e-3
-theta = 85
+theta = 30
 
-bois = from_yaml('materials/bois.yaml')
+foam = from_yaml('materials/foam2.yaml')
+d_foam = 200e-3
+wood = from_yaml('materials/wood.yaml')
+d_wood = 2e-2
 
 S = Solver()
-S.layers = [Layer(bois, d_bois)]
-S.backing = backing.transmission
+S.layers = [
+    Layer(wood, d_wood),
+    Layer(foam, d_pem),
+]
+S.backing = backing.rigid
 
-result = S.solve(20, theta)
-R_recursive = result[0]['R'][0]
+result = S.solve(freq, theta)
+R_pypw = result[0]['R'][0]
 
-print("R_recursive=")
-print(R_recursive)
+print("pypw: R = ", R_pypw)
+#
+
+
