@@ -48,9 +48,6 @@ class Analysis:
         if arg_t == list:
             return np.array(arg)
 
-        elif arg_t == int or arg_t == float or arg_t == complex:
-            return np.array([arg])
-
         elif arg_t == str:
             matched_range = RANGE_MATCHER.match(arg)
             if matched_range is not None:
@@ -70,6 +67,11 @@ class Analysis:
                         return np.array(list(map(float, filter(None, map(lambda _: _.strip(), arg.split(','))))))
                     except:
                         raise ValueError(f'Invalid literal definition (tried list): {arg}')
+        else:
+            try:
+                return np.array([ np.complex128(arg)])
+            except:
+                raise ValueError(f'Invalid literal definition (tried list): {arg}')
 
     def __iter__(self):
         return itertools.product(self.freqs, self.angles)
