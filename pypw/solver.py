@@ -176,6 +176,7 @@ class Solver(object):
 
         if self.backing == backing.transmission:
             trans_coefficient = back_prop*X_0_moins
+            trans_coefficient = trans_coefficient[0,0]
         else:
             trans_coefficient = None
 
