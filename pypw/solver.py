@@ -46,11 +46,17 @@ class Solver(object):
     All post-processing should be done *out* of this class
     """
 
-    def __init__(self, media=[], analyses=[], layers=[], backing=None):
-        self.media = media
-        self.layers = layers
+    def __init__(self, media=None, analyses=None, layers=None, backing=None):
+        self.media = media if media is not None else []
+        self.layers = layers if layers is not None else []
         self.backing = backing
-        self.analyses = analyses if type(analyses) == list else [analyses]
+        if type(analyses) == Analysis:
+            self.analyses = [analyses]
+        elif type(analyses) == list:
+            self.analyses = analyses
+        else:
+            self.analyses = []
+
         self.resultset = []
 
     def check_is_complete(self):
