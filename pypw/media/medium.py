@@ -26,6 +26,7 @@ class Medium(object):
     """ Holds a medium definition and allows its manipulation and loading """
 
     EXPECTED_PARAMS = []
+    OPT_PARAMS = []
     MEDIUM_TYPE = 'generic'
     MODEL = ''
 
@@ -52,6 +53,10 @@ class Medium(object):
             if param_value is None:
                 raise LookupError(f'Unable to find definition of parameter "{param}"')
             else:
+                setattr(self, param, param_type(param_value))
+        for param, param_type in self.__class__.OPT_PARAMS:
+            param_value = parameters.get(param)
+            if param_value is not None:
                 setattr(self, param, param_type(param_value))
         self.name = parameters.get('name', "Unnamed Medium")
         self._compute_missing()

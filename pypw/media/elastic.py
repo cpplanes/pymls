@@ -35,6 +35,10 @@ class Elastic(Medium):
         ('rho', float),  # Density
         ('eta', float),  # loss factor
     ]
+    OPT_PARAMS = [
+        ('lambda_', complex),
+        ('mu', complex)
+    ]
 
     def __init__(self):
         super().__init__()
@@ -51,8 +55,10 @@ class Elastic(Medium):
 
     def _compute_missing(self):
 
-        self.lambda_ = (1+1j*self.eta)*(self.E*self.nu)/((1+self.nu)*(1-2*self.nu))
-        self.mu = (1+1j*self.eta)*(self.E)/(2*(1+self.nu))
+        if self.lambda_ is None:
+            self.lambda_ = (1+1j*self.eta)*(self.E*self.nu)/((1+self.nu)*(1-2*self.nu))
+        if self.mu is None:
+            self.mu = (1+1j*self.eta)*(self.E)/(2*(1+self.nu))
 
     def update_frequency(self, omega):
         self.omega = omega
