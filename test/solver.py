@@ -3,7 +3,7 @@
 #
 # solver.py
 #
-# This file is part of pypw, a software distributed under the MIT license.
+# This file is part of pymls, a software distributed under the MIT license.
 # For any question, please contact one of the authors cited below.
 #
 # Copyright (c) 2017
@@ -29,8 +29,8 @@ import itertools
 
 import numpy as np
 
-from pypw import Solver, Layer, backing, from_yaml
-from pypw.media import Air
+from pymls import Solver, Layer, backing, from_yaml
+from pymls.media import Air
 
 THIS_FILE_DIR = os.path.dirname(os.path.realpath(__file__))
 

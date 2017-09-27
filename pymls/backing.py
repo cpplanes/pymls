@@ -1,9 +1,9 @@
 #! /usr/bin/env python
 # -*- coding:utf8 -*-
 #
-# pypw.py
+# backing.py
 #
-# This file is part of pypw, a software distributed under the MIT license.
+# This file is part of pymls, a software distributed under the MIT license.
 # For any question, please contact one of the authors cited below.
 #
 # Copyright (c) 2017
@@ -22,9 +22,23 @@
 # copies or substantial portions of the Software.
 #
 
-class pyPW(object):
-    """ Main class to start a computation from the command line """
+import numpy as np
+from numpy.lib.scimath import sqrt
+from pymls.media import Air
 
-    def __init__(self):
-        pass
 
+def rigid(omega, k_x):
+
+    return np.matrix([
+        [0],
+        [1]
+    ])
+
+
+def transmission(omega, k_x):
+    k_air = omega/Air.c
+    k_z = sqrt(k_air**2-k_x**2)
+    return np.array([
+        [-1j*k_z/(Air.rho*omega**2)],
+        [1]
+    ])

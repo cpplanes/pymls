@@ -3,7 +3,7 @@
 #
 # media_loading.py
 #
-# This file is part of pypw, a software distributed under the MIT license.
+# This file is part of pymls, a software distributed under the MIT license.
 # For any question, please contact one of the authors cited below.
 #
 # Copyright (c) 2017
@@ -26,7 +26,8 @@ import unittest
 import tempfile
 import os
 
-from pypw.media import from_yaml, Medium, Air, EqFluidJCA
+from pymls.media import from_yaml, Air, EqFluidJCA
+from pymls.media.medium import Medium
 
 
 class MediaLoadingTests(unittest.TestCase):

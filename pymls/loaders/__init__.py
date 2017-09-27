@@ -1,9 +1,9 @@
 #! /usr/bin/env python
 # -*- coding:utf8 -*-
 #
-# fluid.py
+# __init__.py
 #
-# This file is part of pypw, a software distributed under the MIT license.
+# This file is part of pymls, a software distributed under the MIT license.
 # For any question, please contact one of the authors cited below.
 #
 # Copyright (c) 2017
@@ -22,23 +22,5 @@
 # copies or substantial portions of the Software.
 #
 
-from .medium import Medium
+from .yaml_loader import YamlLoader
 
-
-class Fluid(Medium):
-
-    MEDIUM_TYPE = 'fluid'
-    MODEL = MEDIUM_TYPE
-    EXPECTED_FIELDS = [
-        ('rho', float),  # Density
-        ('c', float),  # Sound speed
-    ]
-
-    def __init__(self):
-        super().__init__()
-
-        self.rho = None
-        self.c = None
-
-    def update_frequency(self, omega):
-        self.omega = omega

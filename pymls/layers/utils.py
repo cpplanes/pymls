@@ -1,9 +1,9 @@
 #! /usr/bin/env python
 # -*- coding:utf8 -*-
 #
-# __init__.py
+# utils.py
 #
-# This file is part of pypw, a software distributed under the MIT license.
+# This file is part of pymls, a software distributed under the MIT license.
 # For any question, please contact one of the authors cited below.
 #
 # Copyright (c) 2017
@@ -22,3 +22,17 @@
 # copies or substantial portions of the Software.
 #
 
+from .fluid import transfert_fluid
+from .elastic import transfert_elastic
+from .pem import transfert_pem
+
+
+def generic_layer(medium):
+    if medium.MODEL == 'fluid':
+        return transfert_fluid
+    elif medium.MODEL == 'pem':
+        return transfert_pem
+    elif medium.MODEL == 'elastic':
+        return transfert_elastic
+    else:
+        raise ValueError('Unknown MODEL for propagation in medium')

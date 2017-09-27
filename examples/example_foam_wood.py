@@ -3,7 +3,7 @@
 #
 # main_pem_bois.py
 #
-# This file is part of pypw, a software distributed under the MIT license.
+# This file is part of pymls, a software distributed under the MIT license.
 # For any question, please contact one of the authors cited below.
 #
 # Copyright (c) 2017
@@ -25,7 +25,7 @@
 import sys
 sys.path.append('../')
 
-from pypw import from_yaml, Solver, Layer, backing
+from pymls import from_yaml, Solver, Layer, backing
 
 freq = 20
 d_pem = 200e-3
@@ -43,6 +43,6 @@ S.layers = [
 S.backing = backing.rigid
 
 result = S.solve(freq, theta)
-R_pypw = result[0]['R'][0]
+pymls = result[0]['R'][0]
 
-print("pypw: R = ", R_pypw)
+print("pymls: R = ", pymls)

@@ -1,9 +1,9 @@
 #! /usr/bin/env python
 # -*- coding:utf8 -*-
 #
-# utils.py
+# fluid.py
 #
-# This file is part of pypw, a software distributed under the MIT license.
+# This file is part of pymls, a software distributed under the MIT license.
 # For any question, please contact one of the authors cited below.
 #
 # Copyright (c) 2017
@@ -22,17 +22,23 @@
 # copies or substantial portions of the Software.
 #
 
-from .fluid import transfert_fluid
-from .elastic import transfert_elastic
-from .pem import transfert_pem
+from .medium import Medium
 
 
-def generic_layer(medium):
-    if medium.MODEL == 'fluid':
-        return transfert_fluid
-    elif medium.MODEL == 'pem':
-        return transfert_pem
-    elif medium.MODEL == 'elastic':
-        return transfert_elastic
-    else:
-        raise ValueError('Unknown MODEL for propagation in medium')
+class Fluid(Medium):
+
+    MEDIUM_TYPE = 'fluid'
+    MODEL = MEDIUM_TYPE
+    EXPECTED_FIELDS = [
+        ('rho', float),  # Density
+        ('c', float),  # Sound speed
+    ]
+
+    def __init__(self):
+        super().__init__()
+
+        self.rho = None
+        self.c = None
+
+    def update_frequency(self, omega):
+        self.omega = omega

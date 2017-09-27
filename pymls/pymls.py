@@ -1,9 +1,9 @@
 #! /usr/bin/env python
 # -*- coding:utf8 -*-
 #
-# layer.py
+# pymls.py
 #
-# This file is part of pypw, a software distributed under the MIT license.
+# This file is part of pymls, a software distributed under the MIT license.
 # For any question, please contact one of the authors cited below.
 #
 # Copyright (c) 2017
@@ -22,12 +22,9 @@
 # copies or substantial portions of the Software.
 #
 
-class Layer(object):
+class pyPW(object):
+    """ Main class to start a computation from the command line """
 
-    def __init__(self, medium, thickness, name="Unnamed Layer"):
-        self.thickness = thickness
-        self.medium = medium
-        self.name = name
+    def __init__(self):
+        pass
 
-    def __str__(self):
-        return f'{self.name} - {self.thickness}m of {self.medium.name} (self.medium.MEDIUM_TYPE)'

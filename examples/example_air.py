@@ -3,7 +3,7 @@
 #
 # main.py
 #
-# This file is part of pypw, a software distributed under the MIT license.
+# This file is part of pymls, a software distributed under the MIT license.
 # For any question, please contact one of the authors cited below.
 #
 # Copyright (c) 2017
@@ -27,8 +27,8 @@ sys.path.append('../')
 
 import numpy as np
 
-from pypw import Solver, Layer, backing
-from pypw.media import Air
+from pymls import Solver, Layer, backing
+from pymls.media import Air
 
 freq = 1000
 omega = 2*np.pi*freq
@@ -41,13 +41,13 @@ k_air = omega*np.sqrt(Air.rho/Air.K)
 Z_s = -1j*Air.Z/np.tan(k_air*d)
 R_analytical = (Z_s-Air.Z)/(Z_s+Air.Z)
 
-# Solution using pypw
+# Solution using pymls
 S = Solver()
 S.layers = [Layer(Air, d)]
 S.backing = backing.rigid
 
 result = S.solve(freq, theta)
-R_pypw = result[0]['R'][0]
+pymls = result[0]['R'][0]
 
 print('Analytical : R = ', R_analytical)
-print('pypw : R = ', R_pypw)
+print('pymls : R = ', pymls)

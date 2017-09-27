@@ -3,7 +3,7 @@
 #
 # solver.py
 #
-# This file is part of pypw, a software distributed under the MIT license.
+# This file is part of pymls, a software distributed under the MIT license.
 # For any question, please contact one of the authors cited below.
 #
 # Copyright (c) 2017
@@ -25,11 +25,11 @@
 import numpy as np
 from numpy.lib.scimath import sqrt
 
-from pypw.analysis import Analysis
-from pypw.interface.utils import generic_interface
-from pypw.layers import generic_layer
-import pypw.backing as backing
-from pypw.media import Air
+from pymls.analysis import Analysis
+from pymls.interface.utils import generic_interface
+from pymls.layers import generic_layer
+import pymls.backing as backing
+from pymls.media import Air
 
 
 class IncompleteDefinitionError(Exception):
