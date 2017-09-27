@@ -1,5 +1,5 @@
 
-__VERSION__ = '1.0.0'
+__VERSION__ = '1.1.0'
 
 
 from pymls.solver import Solver
