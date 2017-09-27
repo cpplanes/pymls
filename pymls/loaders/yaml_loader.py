@@ -26,7 +26,7 @@ import yaml
 
 from ..media import from_yaml
 from ..solver import Solver
-from backing import rigid, transmission
+from pymls.backing import rigid, transmission
 
 
 class YamlLoader(object):
