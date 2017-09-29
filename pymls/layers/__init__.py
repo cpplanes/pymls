@@ -27,4 +27,4 @@ from .fluid import transfert_fluid
 from .pem import transfert_pem
 
 from .utils import generic_layer
-from .layer import Layer
+from .layer import Layer, StochasticLayer

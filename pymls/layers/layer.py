@@ -22,12 +22,68 @@
 # copies or substantial portions of the Software.
 #
 
+import copy
+
+
 class Layer(object):
 
     def __init__(self, medium, thickness, name="Unnamed Layer"):
         self.thickness = thickness
-        self.medium = medium
+        self.medium = copy.deepcopy(medium)
         self.name = name
 
     def __str__(self):
         return f'{self.name} - {self.thickness}m of {self.medium.name} (self.medium.MEDIUM_TYPE)'
+
+
+class StochasticLayer(Layer):
+
+    def __init__(self, medium, thickness, stochastic_param, pdf, name="Unnamed Layer"):
+        """
+        medium -- medium object
+        thickness -- layer's thickness
+        stochastic_param -- name of the stochastic parameter
+        pdf -- probability density function from which are drawn the random samples
+        name -- optional layer's name
+
+        Please note that the pdf is a **function handle** that must return
+        a sample per call (and accepts no argument)
+        """
+
+        super().__init__(medium, thickness, name)
+        self.stochastic_param = stochastic_param
+        self.pdf = pdf
+
+        # useful for type lookup and guards
+        self.__medium_params = dict(self.medium.EXPECTED_PARAMS+self.medium.OPT_PARAMS)
+
+        if self.stochastic_param == 'thickness':
+            setattr(self, 'new_draw', self.__draw_thickness)
+            self.initial_param_value = self.thickness
+        elif self.stochastic_param in self.__medium_params.keys():
+            self.initial_param_value = getattr(self.medium, self.stochastic_param)
+            setattr(self, 'new_draw', self.__draw_medium_parameter)
+        else:
+            raise ValueError('Unable to draw a parameter undefined in the layer')
+
+    def __draw_thickness(self):
+        self.thickness = float(self.pdf())
+
+    def __draw_medium_parameter(self):
+        draw = self.pdf()
+        expected_type = self.__medium_params[self.stochastic_param]
+        if type(draw) == expected_type:
+            setattr(self.medium, self.stochastic_param, draw)
+            self.medium.omega = -1
+        else:
+            raise TypeError(f'Draw of type {type(draw)} but expected type {expected_type}')
+        return draw
+
+    def __str__(self):
+        return f'{self.name} - {self.thickness}m of {self.medium.name} (self.medium.MEDIUM_TYPE)'
+
+    def reinit(self):
+        if self.stochastic_param == 'thickness':
+            self.thickness = self.initial_param_value
+        else:
+            setattr(self.medium, self.stochastic_param, self.initial_param_value)
