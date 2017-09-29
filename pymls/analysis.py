@@ -33,12 +33,13 @@ RANGE_MATCHER = re.compile(r'^(\d+\.?\d*):(\d+\.?\d*)?:(\d+\.?\d*)$')
 
 class Analysis:
 
-    def __init__(self, name, freqs, angles):
+    def __init__(self, name, freqs, angles, enable_stochastic=False):
         self.name = name
         self.freqs = self.__parse_arg(freqs)
         self.angles = self.__parse_arg(angles)
         self.raw_freqs = freqs
         self.raw_angles = angles
+        self.enable_stochastic = enable_stochastic
 
 
     def __parse_arg(self, arg):

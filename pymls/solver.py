@@ -27,7 +27,7 @@ from numpy.lib.scimath import sqrt
 
 from pymls.analysis import Analysis
 from pymls.interface.utils import generic_interface
-from pymls.layers import generic_layer
+from pymls.layers import generic_layer, StochasticLayer
 import pymls.backing as backing
 from pymls.media import Air
 
@@ -74,30 +74,86 @@ class Solver(object):
 
         return True
 
-    def solve(self, frequencies=None, angles=0):
+
+    def solve(self, frequencies=None, angles=0, n_draws=1000, prng_state=None):
         self.check_is_complete()
 
+        self.n_draws = n_draws
+        self.stochastic_layers = list(filter(
+            lambda _: type(_[1]) == StochasticLayer,
+            enumerate(self.layers)
+        ))
+        if self.stochastic_layers and prng_state is None:
+            self.prng_state = np.random.get_state()
+
         if frequencies is not None:
-            self.analyses.append(Analysis('auto', frequencies, angles))
+            self.analyses.append(Analysis('auto', frequencies, angles, self.stochastic_layers))
 
         for a in self.analyses:
-            result = {
-                'name': a.name,
-                'f': [],
-                'angle': [],
-                'R': [],
-                'T': [],
-            }
-            for f, angle in a:
-                (R, T) = self.__solve_one_frequency(f, angle)
-                result['f'].append(f)
-                result['angle'].append(angle)
-                result['R'].append(R)
-                if T is not None:
-                    result['T'].append(T)
-            self.resultset.append(result)
+            if a.enable_stochastic:
+                partial_resultset = self.__run_stochastic_analysis(a)
+                self.resultset += partial_resultset
+            else:
+                result = self.__run__analysis(a)
+                self.resultset.append(result)
 
         return self.resultset
+
+    def __run_stochastic_analysis(self, a):
+        partial_resultset = []
+        analysis_size = len(a.freqs)*len(a.angles)
+
+        for l_id, l in self.stochastic_layers:
+            self.__reinit_stochastic_solver()
+
+            result = {
+                'name': a.name,
+                'enable_stochastic': a.enable_stochastic,
+                'stochastics': {
+                    'layer': l_id,
+                    'param': l.stochastic_param,
+                    'values': [],
+                },
+                'f': a.freqs,
+                'angle': a.angles,
+                'R': [[] for _ in range(analysis_size)],
+                'T': [[] for _ in range(analysis_size)],
+            }
+
+            for i_draw in range(self.n_draws):
+                draw = l.new_draw()
+                result['stochastics']['values'].append(draw)
+                for analysis_point, (f, angle) in enumerate(a):
+                    (R, T) = self.__solve_one_frequency(f, angle)
+                    result['R'][analysis_point].append(R)
+                    if T is not None:
+                        result['T'][analysis_size].append(T)
+
+            partial_resultset.append(result)
+        return partial_resultset
+
+    def __run__analysis(self, a):
+        result = {
+            'name': a.name,
+            'enable_stochastic': a.enable_stochastic,
+            'f': a.freqs,
+            'angle': a.angles,
+            'R': [],
+            'T': [],
+        }
+
+        for f, angle in a:
+            (R, T) = self.__solve_one_frequency(f, angle)
+            result['R'].append(R)
+            if T is not None:
+                result['T'].append(T)
+
+            return result
+
+    def __reinit_stochastic_solver(self):
+        np.random.set_state(self.prng_state)
+        for _,l in self.stochastic_layers:
+            l.reinit()
 
     def __solve_one_frequency(self, frequency, theta_inc):
 
