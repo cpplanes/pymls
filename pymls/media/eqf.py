@@ -59,7 +59,7 @@ class EqFluidJCA(Medium):
         self.eta = None
 
     def _compute_missing(self):
-        self.N = 0.5*self.E/(1+self.nu)
+        self.N = self.E/(2*(1+self.nu))
 
     def update_frequency(self, omega):
 

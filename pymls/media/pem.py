@@ -53,8 +53,6 @@ class PEM(EqFluidJCA):
         super()._compute_missing()
 
         self.lambda_ = self.E*self.nu/((1+self.nu)*(1-2*self.nu))
-        self.mu = self.E/(2*(1+self.nu))
-        self.N = 0.5*self.E/(1+self.nu)
 
         self.rho_12 = -self.phi*Air.rho*(self.alpha-1)
         self.rho_11 = self.rho_1-self.rho_12
@@ -72,8 +70,6 @@ class PEM(EqFluidJCA):
         self.gamma_til = self.phi*(self.rho_12_til/self.rho_22_til-(1-self.phi)/self.phi)
         self.rho_s_til = self.rho_til+self.gamma_til**2*self.rho_eq_til
 
-        self.A_hat = (self.E*self.nu)/((1+self.nu)*(1-2*self.nu))
-
         if self.loss_type == 'anelastic':
             raise NotImplementedError("Anelastic losses not implemented yet")
             # *HAS* to be in update_frequency() if anelastic is considered
@@ -85,10 +81,8 @@ class PEM(EqFluidJCA):
         else:
             raise ValueError('Unknown type of losses')
 
-        self.N = self.N*self.structural_loss
-
-        self.A_hat = self.A_hat*self.structural_loss
-
+        self.N = self.E/(2*(1+self.nu))*self.structural_loss
+        self.A_hat = (self.E*self.nu)/((1+self.nu)*(1-2*self.nu))*self.structural_loss
         self.P_hat = self.A_hat+2*self.N
 
         # Biot 1956 elastic coefficients
@@ -102,13 +96,13 @@ class PEM(EqFluidJCA):
 
         Psi = ((delta_s_2**2+delta_eq**2)**2-4*delta_eq**2*delta_s_1**2)
         sdelta_total = sqrt(Psi)
+
         delta_1 = sqrt(0.5*(delta_s_2**2+delta_eq**2+sdelta_total))
         delta_2 = sqrt(0.5*(delta_s_2**2+delta_eq**2-sdelta_total))
+        delta_3 = omega*sqrt(self.rho_til/self.N)
 
         mu_1 = self.gamma_til*delta_eq**2/(delta_1**2-delta_eq**2)
         mu_2 = self.gamma_til*delta_eq**2/(delta_2**2-delta_eq**2)
-
-        delta_3 = omega*sqrt(self.rho_til/self.N)
         mu_3 = -self.gamma_til
 
         self.delta_1 = delta_1
