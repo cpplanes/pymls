@@ -57,7 +57,7 @@ class Analysis:
                     start, end = float(start), float(end)
                     step = float(step) if step is not None else None
 
-                    return np.arange(start, stop, step)
+                    return np.arange(start, end+step/2, step)
                 except:
                     raise ValueError(f'Invalid literal definition (tried range): {arg}')
             else:
