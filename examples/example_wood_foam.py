@@ -38,7 +38,7 @@ d_wood = 2e-2
 S = Solver()
 S.layers = [
     Layer(wood, d_wood),
-    Layer(foam, d_pem),
+    Layer(foam, d_foam),
 ]
 S.backing = backing.rigid
 
@@ -46,6 +46,3 @@ result = S.solve(freq, theta)
 pymls = result['R'][0]
 
 print("pymls: R = ", pymls)
-#
-
-
