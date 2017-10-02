@@ -45,7 +45,7 @@ S = Solver()
 S.layers = [ StochasticLayer(foam, d, 'thickness', pdf)]
 S.backing = backing.rigid
 
-result = S.solve(freqs, theta, n_draws=n_draws)[0]
+result = S.solve(freqs, theta, n_draws=n_draws)
 
 
 # produce a figure for the absorption coefficient

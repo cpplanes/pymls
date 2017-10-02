@@ -47,7 +47,7 @@ S.layers = [Layer(Air, d)]
 S.backing = backing.rigid
 
 result = S.solve(freq, theta)
-pymls = result[0]['R'][0]
+pymls = result['R'][0]
 
 print('Analytical : R = ', R_analytical)
 print('pymls : R = ', pymls)

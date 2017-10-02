@@ -38,6 +38,6 @@ S.layers = [ Layer(foam, d)]
 S.backing = backing.rigid
 
 result = S.solve(freq, theta)
-pymls = result[0]['R'][0]
+pymls = result['R'][0]
 
 print("pymls: R = ", pymls)
