@@ -54,7 +54,7 @@ class SolverTests(unittest.TestCase):
             S.backing = backing.rigid
             result = S.solve(FREQS, 0)
 
-            for i_f, f in enumerate(result[0]['f']):
+            for i_f, f in enumerate(result['f']):
                 omega = 2*np.pi*f
                 k_air = omega*np.sqrt(Air.rho/Air.K)
                 Z_s = -1j*Air.Z/np.tan(k_air*d)
@@ -63,7 +63,7 @@ class SolverTests(unittest.TestCase):
 
                 self.assertAlmostEqual(
                     R_analytical,
-                    result[0]['R'][i_f],
+                    result['R'][i_f],
                     NB_PLACES,
                     f'(reflection) f={f}Hz, d={d}, theta=0'
                 )
@@ -84,9 +84,9 @@ class SolverTests(unittest.TestCase):
                         S.backing = backing_func
                         result = S.solve(l[0], l[1])
 
-                        self.assertAlmostEqual(result[0]['R'][0], l[2]+1j*l[3], tol)
+                        self.assertAlmostEqual(result['R'][0], l[2]+1j*l[3], tol)
                         if backing_func == backing.transmission:
-                            self.assertAlmostEqual(result[0]['T'][0], l[4]+1j*l[5], tol)
+                            self.assertAlmostEqual(result['T'][0], l[4]+1j*l[5], tol)
 
     # def test_elastic_numerical(self):
     #     self.helper_numerical_tests(['wood', 'glass'], BACKINGS, NB_PLACES)
@@ -128,9 +128,9 @@ class SolverTests(unittest.TestCase):
                     S.backing = backing_func
                     result = S.solve(l[0], l[1])
 
-                    self.assertAlmostEqual(result[0]['R'][0], l[2]+1j*l[3], tol)
+                    self.assertAlmostEqual(result['R'][0], l[2]+1j*l[3], tol)
                     if backing_func == backing.transmission:
-                        self.assertAlmostEqual(result[0]['T'][0], l[4]+1j*l[5], tol)
+                        self.assertAlmostEqual(result['T'][0], l[4]+1j*l[5], tol)
 
     def test_pem_bois_rigid_numerical(self):
         self.helper_bi_mat('foam2', 'wood', BACKINGS[:0], 10)
