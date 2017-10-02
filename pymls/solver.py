@@ -89,6 +89,7 @@ class Solver(object):
         if frequencies is not None:
             self.analyses.append(Analysis('auto', frequencies, angles, self.stochastic_layers))
 
+        self.n_analyses = 0
         for a in self.analyses:
             if a.enable_stochastic:
                 partial_resultset = self.__run_stochastic_analysis(a)
@@ -97,6 +98,8 @@ class Solver(object):
                 result = self.__run__analysis(a)
                 self.resultset.append(result)
 
+        if self.n_analyses==1:
+            self.resultset = self.resultset[0]
         return self.resultset
 
     def __run_stochastic_analysis(self, a):
@@ -104,6 +107,7 @@ class Solver(object):
         analysis_size = len(a.freqs)*len(a.angles)
 
         for l_id, l in self.stochastic_layers:
+            self.n_analyses += 1
             self.__reinit_stochastic_solver()
 
             result = {
@@ -133,6 +137,7 @@ class Solver(object):
         return partial_resultset
 
     def __run__analysis(self, a):
+        self.n_analyses += 1
         result = {
             'name': a.name,
             'enable_stochastic': a.enable_stochastic,
