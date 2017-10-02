@@ -153,7 +153,7 @@ class Solver(object):
             if T is not None:
                 result['T'].append(T)
 
-            return result
+        return result
 
     def __reinit_stochastic_solver(self):
         np.random.set_state(self.prng_state)
