@@ -1,4 +1,4 @@
-__VERSION__ = '1.2.0'
+__VERSION__ = '1.2'
 
 from pymls.solver import Solver
 from pymls.layers import Layer, StochasticLayer
