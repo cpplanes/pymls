@@ -87,7 +87,13 @@ class Solver(object):
             self.prng_state = np.random.get_state()
 
         if frequencies is not None:
-            self.analyses.append(Analysis('auto', frequencies, angles, self.stochastic_layers))
+            self.analyses.append(
+                Analysis(
+                    'auto',
+                    frequencies,
+                    angles,
+                    len(self.stochastic_layers)>0
+            ))
 
         self.n_analyses = 0
         for a in self.analyses:
