@@ -67,7 +67,9 @@ class StochasticLayer(Layer):
             raise ValueError('Unable to draw a parameter undefined in the layer')
 
     def __draw_thickness(self):
-        self.thickness = float(self.pdf())
+        draw = float(self.pdf())
+        self.thickness = draw
+        return draw
 
     def __draw_medium_parameter(self):
         draw = self.pdf()
