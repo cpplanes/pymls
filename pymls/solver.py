@@ -198,7 +198,7 @@ class Solver(object):
                 (Omega_moins, tau) = interface_func(Omega_plus)
             else:
                 Omega_moins = Omega_plus
-                tau = np.eye(len(Omega_moins))
+                tau = np.eye(int(len(Omega_moins)/2))
 
             layer_func = generic_layer(L.medium)
             (Omega_plus, xi) = layer_func(Omega_moins, omega, k_x, L.medium, L.thickness)
