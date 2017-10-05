@@ -137,7 +137,7 @@ class Solver(object):
                     (R, T) = self.__solve_one_frequency(f, angle)
                     result['R'][analysis_point].append(R)
                     if T is not None:
-                        result['T'][analysis_size].append(T)
+                        result['T'][analysis_point].append(T)
 
             partial_resultset.append(result)
         return partial_resultset
