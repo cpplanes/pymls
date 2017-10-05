@@ -137,3 +137,9 @@ class SolverTests(unittest.TestCase):
 
     def test_pem_bois_transmission_numerical(self):
         self.helper_bi_mat('foam2', 'wood', BACKINGS[1:1], 10)
+
+    def test_2xpem_rigid_numerical(self):
+        self.helper_bi_mat('foam2', 'foam2', BACKINGS[:0], 10)
+
+    def test_2xpem_transmission_numerical(self):
+        self.helper_bi_mat('foam2', 'foam2', BACKINGS[1:1], 10)
