@@ -80,6 +80,7 @@ def hdf5_export(filename, S):
         elif not a['enable_stochastic']:
             raise ValueError('Two analysis with the same name present in the resultset')
 
+    dt_str = h5py.special_dtype(vlen=str)
     metadata_group = F.create_group('meta')
 
     # save the definition of the multilayer
@@ -97,7 +98,6 @@ def hdf5_export(filename, S):
     prng_dset.attrs['cached_gaussian'] = S.prng_state[4]
 
     # dump all analyses, one per group
-    dt_str = h5py.special_dtype(vlen=str)
     filtered = []
     for r in resultset:
 
@@ -114,6 +114,6 @@ def hdf5_export(filename, S):
                 subG = G.create_group(str(a['stochastics']['layer'])+'_'+a['stochastics']['param'])
                 __dump_in_group(subG, a, S.backing == backing.transmission)
         else:
-            __dump_in_group(G, a, S.backing == backing.transmission)
+            __dump_in_group(G, r, S.backing == backing.transmission)
 
     F.close()
