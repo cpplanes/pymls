@@ -31,6 +31,21 @@ class Layer(object):
         self.thickness = thickness
         self.medium = copy.deepcopy(medium)
         self.name = name
+        self.hooks = {
+            'pre_update_frequency': []
+        }
+
+    def update_frequency(self, omega):
+        for f in self.hooks['pre_update_frequency']:
+            f(self)
+        self.medium.update_frequency(omega)
+
+    def register(self, hook_name):
+        if self.hooks.get(hook_name) is None:
+            raise ValueError(f"Invalid hook name. Use one of : {','.join(self.hooks.keys())}")
+        def decorator(func):
+            self.hooks[hook_name].append(func)
+        return decorator
 
     def __str__(self):
         return f'{self.name} - {self.thickness}m of {self.medium.name} (self.medium.MEDIUM_TYPE)'

@@ -170,8 +170,8 @@ class Solver(object):
 
         omega = frequency*2*np.pi
 
-        for m in self.media:
-            m.update_frequency(omega)
+        for L in self.layers:
+            L.update_frequency(omega)
 
         # compute k_x
         k_x = omega/Air.c*np.sin(theta_inc*np.pi/180)
@@ -248,3 +248,6 @@ class Solver(object):
             trans_coefficient = None
 
         return (reflx_coefficient, trans_coefficient)
+
+    def register_pre_update_frequency(self, fun):
+        hooks['pre_update_frequency'].append()
