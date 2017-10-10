@@ -75,3 +75,5 @@ class EqFluidJCA(Medium):
         self.F_prime_CA = sqrt(1+1j*omega/self.omega_prime_infty)
         self.alpha_prime_til = 1+self.omega_prime_infty*self.F_prime_CA/(2*1j*omega)
         self.K_eq_til = (Air.gamma*Air.P/self.phi)/(Air.gamma-(Air.gamma-1)/self.alpha_prime_til)
+
+        self.c_eq_til = sqrt(self.K_eq_til/self.rho_eq_til)

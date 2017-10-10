@@ -29,8 +29,8 @@ from numpy.lib.scimath import sqrt
 def transfert_fluid(Omega_moins, omega, k_x, medium, d):
 
     if medium.MEDIUM_TYPE == 'eqf':
-        rho = medium.rho_eq
-        c = medium.c_eq
+        rho = medium.rho_eq_til
+        c = medium.c_eq_til
     elif medium.MEDIUM_TYPE == 'fluid':
         rho = medium.rho
         c = medium.c
