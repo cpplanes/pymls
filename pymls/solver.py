@@ -213,7 +213,7 @@ class Solver(object):
 
         else:
             Omega_moins = Omega_plus
-            tau = np.eye(len(Omega_moins))
+            tau = np.eye(int(len(Omega_moins)/2))
 
         if self.backing == backing.transmission:
             back_prop = back_prop.dot(tau)
