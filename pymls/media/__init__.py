@@ -13,10 +13,13 @@ __MEDIUMCLASSES_MAP = {
 }
 
 
-def from_yaml(filename):
+def from_yaml(filename, force=None):
     """Reads medium definition from YAML file filename. Raises an IOError if the file
     is not found, ValueError if medium type is not known and a LookupError if the
-    parameter definition is incomplete."""
+    parameter definition is incomplete.
+
+    One may set the optional argument 'force' to a medium type to force loading this one.
+    """
 
     if not os.path.exists(filename):
         raise IOError(f'Unable to locate file {filename}')
@@ -24,10 +27,13 @@ def from_yaml(filename):
     with open(filename) as fh:
         yaml_data = yaml.load(fh)
 
-    if yaml_data.get('medium_type') is None:
+    if yaml_data.get('medium_type') is None and force not in list(__MEDIUMCLASSES_MAP.keys()):
         raise LookupError('Unspecified medium type')
 
-    medium_class = __MEDIUMCLASSES_MAP.get(yaml_data['medium_type'])
+    if force is None:
+        medium_class = __MEDIUMCLASSES_MAP.get(yaml_data['medium_type'])
+    else:
+        medium_class = force
     if medium_class is None:
         raise ValueError(f'Medium type is not known')
     else:
