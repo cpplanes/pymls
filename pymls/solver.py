@@ -248,6 +248,3 @@ class Solver(object):
             trans_coefficient = None
 
         return (reflx_coefficient, trans_coefficient)
-
-    def register_pre_update_frequency(self, fun):
-        hooks['pre_update_frequency'].append()
