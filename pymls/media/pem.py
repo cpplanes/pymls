@@ -105,6 +105,8 @@ class PEM(EqFluidJCA):
         mu_2 = self.gamma_til*delta_eq**2/(delta_2**2-delta_eq**2)
         mu_3 = -self.gamma_til
 
+        self.delta_s_1 = delta_s_1
+        self.delta_s_2 = delta_s_2
         self.delta_1 = delta_1
         self.delta_2 = delta_2
         self.delta_3 = delta_3
