@@ -27,7 +27,7 @@ def from_yaml(filename, force=None):
     with open(filename) as fh:
         yaml_data = yaml.load(fh)
 
-    if yaml_data.get('medium_type') is None and force not in list(__MEDIUMCLASSES_MAP.keys()):
+    if yaml_data.get('medium_type') is None and force is None:
         raise LookupError('Unspecified medium type')
 
     if force is None:
