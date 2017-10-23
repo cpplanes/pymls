@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding:utf8 -*-
 #
-# __init__.py
+# indicators.py
 #
 # This file is part of pymls, a software distributed under the MIT license.
 # For any question, please contact one of the authors cited below.
@@ -22,6 +22,15 @@
 # copies or substantial portions of the Software.
 #
 
-from .yaml_loader import YamlLoader
-from .hdf5_export import hdf5_export
-from .indicators import *
+
+import numpy as np
+
+
+def alpha_from_R(R):
+	""" Compute the absorption coefficient from the Reflexion coefficient """
+	return 1-np.abs(R)**2
+
+
+def TL_from_T(T):
+	""" Compute the Transmission Loss from the Transmission coefficient """
+	return -20*np.log10(np.abs(T))
