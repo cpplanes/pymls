@@ -27,10 +27,10 @@ import numpy as np
 
 
 def alpha_from_R(R):
-	""" Compute the absorption coefficient from the Reflexion coefficient """
-	return 1-np.abs(R)**2
+    """ Compute the absorption coefficient from the Reflexion coefficient """
+    return 1-np.abs(R)**2
 
 
 def TL_from_T(T):
-	""" Compute the Transmission Loss from the Transmission coefficient """
-	return -20*np.log10(np.abs(T))
+    """ Compute the Transmission Loss from the Transmission coefficient """
+    return -20*np.log10(np.abs(T))
