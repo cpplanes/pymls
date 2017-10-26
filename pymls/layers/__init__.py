@@ -25,6 +25,7 @@
 from .elastic import transfert_elastic
 from .fluid import transfert_fluid
 from .pem import transfert_pem
+from .screen import transfert_screen
 
 from .utils import generic_layer
 from .layer import Layer, StochasticLayer

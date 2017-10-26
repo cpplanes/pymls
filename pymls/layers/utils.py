@@ -25,11 +25,14 @@
 from .fluid import transfert_fluid
 from .elastic import transfert_elastic
 from .pem import transfert_pem
+from .screen import transfert_screen
 
 
 def generic_layer(medium):
     if medium.MODEL == 'fluid':
         return transfert_fluid
+    elif medium.MODEL == 'pem' and medium.MEDIUM_TYPE == 'screen':
+        return transfert_screen
     elif medium.MODEL == 'pem':
         return transfert_pem
     elif medium.MODEL == 'elastic':
