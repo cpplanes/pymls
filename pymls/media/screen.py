@@ -44,7 +44,7 @@ class Screen(PEM):
         #  Simplified model for rho_eq_til & K_eq_til
         self.rho_eq_til = (Air.rho/self.phi)+self.sigma/(1j*omega)
         self.alpha_til = self.phi*self.rho_eq_til/Air.rho
-        self.K_eq_til = (Air.gamma*Air.P/self.phi)
+        self.K_eq_til = Air.P/self.phi
 
         self.c_eq_til = sqrt(self.K_eq_til/self.rho_eq_til)
 
