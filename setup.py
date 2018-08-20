@@ -42,8 +42,8 @@ setup(name='pymls',
         'Operating System :: OS Independent',
     ],
     install_requires=[
-        'numpy==1.13.1',
-        'PyYAML==3.12',
+        'numpy>=1.13.1',
+        'PyYAML>=3.12',
     ],
     extras_require={
         'HDF5 export': ['h5py>=2.7.1']
