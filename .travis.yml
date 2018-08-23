@@ -1,0 +1,19 @@
+language: python
+python:
+  - "3.4"
+  - "3.5"
+  - "3.6"
+  - "3.7"
+
+# command to install dependencies
+install:
+ - pip install .
+ - pip install pytest coverage python-coveralls flake8
+
+# command to run tests
+script:
+  - coverage run --source pymls -m py.test
+  - flake8 pymls
+
+after_success:
+- coveralls
