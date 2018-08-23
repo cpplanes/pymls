@@ -27,6 +27,7 @@ from .air import Air
 from numpy.lib.scimath import sqrt
 import numpy as np
 
+
 class Screen(PEM):
 
     MEDIUM_TYPE = 'screen'
@@ -87,7 +88,7 @@ class Screen(PEM):
         delta_2 = sqrt(0.5*(delta_s_2**2+delta_eq**2-sdelta_total))
         delta_3 = omega*sqrt(self.rho_til/self.N)
 
-        if np.abs(delta_1-delta_eq)<np.abs(delta_2-delta_eq):
+        if np.abs(delta_1-delta_eq) < np.abs(delta_2-delta_eq):
             delta_1, delta_2 = delta_2, delta_1
 
         mu_1 = self.gamma_til*delta_eq**2/(delta_1**2-delta_eq**2)
@@ -104,4 +105,3 @@ class Screen(PEM):
         self.mu_1 = mu_1
         self.mu_2 = mu_2
         self.mu_3 = mu_3
-

@@ -43,6 +43,7 @@ class Layer(object):
     def register(self, hook_name):
         if self.hooks.get(hook_name) is None:
             raise ValueError(f"Invalid hook name. Use one of : {','.join(self.hooks.keys())}")
+
         def decorator(func):
             self.hooks[hook_name].append(func)
         return decorator

@@ -93,7 +93,7 @@ class YamlLoader(object):
             if type(primary_v) == str:
                 continue
 
-            get = lambda _: primary_v.get(_) if self.__class__.EXPECTED_FIELDS[primary_k]['type'][0] == dict else lambda _: _
+            get = lambda _: primary_v.get(_) if self.__class__.EXPECTED_FIELDS[primary_k]['type'][0] == dict else lambda _: _  # noqa: E731
             for item in primary_v:
                 if not type(get(item)) == self.__class__.EXPECTED_FIELDS[primary_k]['type'][1]:
                     raise ValueError(f'Invalid data type in definition of {primary_k}')

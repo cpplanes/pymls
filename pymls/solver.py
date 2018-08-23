@@ -69,11 +69,10 @@ class Solver(object):
         missing_media = {l.medium for l in self.layers} - set(self.media)
         self.media += list(missing_media)
 
-        if not self.backing in [backing.transmission, backing.rigid]:
+        if self.backing not in [backing.transmission, backing.rigid]:
             raise IncompleteDefinitionError('No backing provided')
 
         return True
-
 
     def solve(self, frequencies=None, angles=0, n_draws=1000, prng_state=None):
         self.check_is_complete()
@@ -92,8 +91,8 @@ class Solver(object):
                     'auto',
                     frequencies,
                     angles,
-                    len(self.stochastic_layers)>0
-            ))
+                    len(self.stochastic_layers) > 0
+                ))
 
         self.n_analyses = 0
         for a in self.analyses:
@@ -104,7 +103,7 @@ class Solver(object):
                 result = self.__run__analysis(a)
                 self.resultset.append(result)
 
-        if self.n_analyses==1:
+        if self.n_analyses == 1:
             self.resultset = self.resultset[0]
         return self.resultset
 

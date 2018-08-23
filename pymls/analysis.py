@@ -41,7 +41,6 @@ class Analysis:
         self.raw_angles = angles
         self.enable_stochastic = enable_stochastic
 
-
     def __parse_arg(self, arg):
 
         arg_t = type(arg)
@@ -58,20 +57,20 @@ class Analysis:
                     step = float(step) if step is not None else None
 
                     return np.arange(start, end+step/2, step)
-                except:
+                except ValueError:
                     raise ValueError(f'Invalid literal definition (tried range): {arg}')
             else:
                 try:
                     arg = float(arg)
-                except:
+                except ValueError:
                     try:
                         return np.array(list(map(float, filter(None, map(lambda _: _.strip(), arg.split(','))))))
-                    except:
+                    except ValueError:
                         raise ValueError(f'Invalid literal definition (tried list): {arg}')
         else:
             try:
-                return np.array([ np.complex128(arg)])
-            except:
+                return np.array([np.complex128(arg)])
+            except TypeError:
                 raise ValueError(f'Invalid literal definition (tried list): {arg}')
 
     def __iter__(self):

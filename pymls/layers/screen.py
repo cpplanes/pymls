@@ -23,7 +23,7 @@
 #
 
 import numpy as np
-from numpy.lib.scimath import sqrt
+
 
 def transfert_screen(Omega_moins, omega, k_x, m, d):
 
@@ -51,6 +51,3 @@ def transfert_screen(Omega_moins, omega, k_x, m, d):
     Xi = np.eye(3)
 
     return (Omega_plus, Xi)
-#
-
-
