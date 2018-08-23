@@ -35,7 +35,11 @@ class Medium(object):
         self.name = 'Generic Medium'
 
     def __str__(self):
-        return f'{self.name} (type: {self.__class__.MEDIUM_TYPE}, model: {self.__class__.MODEL})'
+        return '{} (type: {}, model: {})'.format(
+            self.name,
+            self.__class__.MEDIUM_TYPE,
+            self.__class__.MODEL
+        )
 
     def update_frequency(self, omega):
         """ Computes parameters' value for the given circular frequency """
@@ -51,7 +55,7 @@ class Medium(object):
         for param, param_type in self.__class__.EXPECTED_PARAMS:
             param_value = parameters.get(param)
             if param_value is None:
-                raise LookupError(f'Unable to find definition of parameter "{param}"')
+                raise LookupError('Unable to find definition of parameter "{}"'.format(param))
             else:
                 setattr(self, param, param_type(param_value))
         for param, param_type in self.__class__.OPT_PARAMS:

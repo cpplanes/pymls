@@ -89,14 +89,14 @@ class YamlLoader(object):
 
         for primary_k, primary_v in self.loaded_yaml.items():
             if not type(primary_v) == self.__class__.EXPECTED_FIELDS[primary_k]['type'][0]:
-                raise ValueError(f'Invalid data type in definition of {primary_k}')
+                raise ValueError('Invalid data type in definition of {}'.format(primary_k))
             if type(primary_v) == str:
                 continue
 
             get = lambda _: primary_v.get(_) if self.__class__.EXPECTED_FIELDS[primary_k]['type'][0] == dict else lambda _: _  # noqa: E731
             for item in primary_v:
                 if not type(get(item)) == self.__class__.EXPECTED_FIELDS[primary_k]['type'][1]:
-                    raise ValueError(f'Invalid data type in definition of {primary_k}')
+                    raise ValueError('Invalid data type in definition of {}'.format(primary_k))
 
                 expected_keys = set(self.__class__.EXPECTED_FIELDS[primary_k]['item_keys'])
                 yaml_keys = set(get(item).keys())
@@ -119,7 +119,7 @@ class YamlLoader(object):
         for i_l, l in enumerate(self.loaded_yaml['multilayer']):
 
             # Check that layer's definition is correct
-            msg = f'Bad layer definition in layer {i_l}'
+            msg = 'Bad layer definition in layer {}'.format(i_l)
             error = False
             if l.get('thickness') < 0:
                 msg += "thickness must be >= 0"
@@ -138,7 +138,7 @@ class YamlLoader(object):
         # parse backing specification
         backing_func = self.__class__.MAP_BACKING.get(self.loaded_yaml['backing'])
         if backing_func is None:
-            raise ValueError(f"Unkniwn backing type {self.loaded_yaml['backing']}")
+            raise ValueError('Unknown backing type {}'.format(self.loaded_yaml['backing']))
         else:
             solver.backing = backing_func
 
@@ -147,6 +147,6 @@ class YamlLoader(object):
             # check for a valid set of keys
             for typ, expected_keys in self.__class__.KEYS_ANALYSIS:
                 if a['type'] == typ and set(a.keys) != set(expected_keys):
-                    raise ValueError(f'Bad analysis definition for analysis {i_a}')
+                    raise ValueError('Bad analysis definition for analysis {}'.format(i_a))
                 else:
                     solver.analysis.append(a)

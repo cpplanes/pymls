@@ -58,7 +58,7 @@ class Analysis:
 
                     return np.arange(start, end+step/2, step)
                 except ValueError:
-                    raise ValueError(f'Invalid literal definition (tried range): {arg}')
+                    raise ValueError('Invalid literal definition (tried range): {}'.format(arg))
             else:
                 try:
                     arg = float(arg)
@@ -66,12 +66,12 @@ class Analysis:
                     try:
                         return np.array(list(map(float, filter(None, map(lambda _: _.strip(), arg.split(','))))))
                     except ValueError:
-                        raise ValueError(f'Invalid literal definition (tried list): {arg}')
+                        raise ValueError('Invalid literal definition (tried list): {}'.format(arg))
         else:
             try:
                 return np.array([np.complex128(arg)])
             except TypeError:
-                raise ValueError(f'Invalid literal definition (tried list): {arg}')
+                raise ValueError('Invalid literal definition (tried list): {}'.format(arg))
 
     def __iter__(self):
         return itertools.product(self.freqs, self.angles)

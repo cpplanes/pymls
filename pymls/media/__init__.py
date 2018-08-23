@@ -23,7 +23,7 @@ def from_yaml(filename, force=None):
     """
 
     if not os.path.exists(filename):
-        raise IOError(f'Unable to locate file {filename}')
+        raise IOError('Unable to locate file {}'.format(filename))
 
     with open(filename) as fh:
         yaml_data = yaml.load(fh)
@@ -36,7 +36,7 @@ def from_yaml(filename, force=None):
     else:
         medium_class = force
     if medium_class is None:
-        raise ValueError(f'Medium type is not known')
+        raise ValueError('Medium type is not known')
     else:
         medium = medium_class()
         medium.from_dict(yaml_data)

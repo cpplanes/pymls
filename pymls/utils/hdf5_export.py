@@ -65,7 +65,7 @@ def hdf5_export(filename, S):
     try:
         F = h5py.File(filename, 'w')
     except OSError as e:
-        print(f'Unable to save into {filename} :\n\t{e}')
+        print('Unable to save into {} :\n\t{}'.format(filename, str(e)))
         return False
 
     # normalise the type of resultset

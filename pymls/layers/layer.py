@@ -42,14 +42,19 @@ class Layer(object):
 
     def register(self, hook_name):
         if self.hooks.get(hook_name) is None:
-            raise ValueError(f"Invalid hook name. Use one of : {','.join(self.hooks.keys())}")
+            raise ValueError("Invalid hook name. Use one of : {}".format(','.join(self.hooks.keys())))
 
         def decorator(func):
             self.hooks[hook_name].append(func)
         return decorator
 
     def __str__(self):
-        return f'{self.name} - {self.thickness}m of {self.medium.name} (self.medium.MEDIUM_TYPE)'
+        return '{} - {}m of {} ({})'.format(
+            self.name,
+            self.thickness,
+            self.medium.name,
+            self.medium.MEDIUM_TYPE
+        )
 
 
 class StochasticLayer(Layer):
@@ -94,11 +99,11 @@ class StochasticLayer(Layer):
             setattr(self.medium, self.stochastic_param, draw)
             self.medium.omega = -1
         else:
-            raise TypeError(f'Draw of type {type(draw)} but expected type {expected_type}')
+            raise TypeError('Draw of type {} but expected type {}'.format(
+                type(draw),
+                expected_type
+            ))
         return draw
-
-    def __str__(self):
-        return f'{self.name} - {self.thickness}m of {self.medium.name} (self.medium.MEDIUM_TYPE)'
 
     def reinit(self):
         if self.stochastic_param == 'thickness':
