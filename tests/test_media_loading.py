@@ -57,7 +57,7 @@ class MediaLoadingTests(unittest.TestCase):
         with open(self.yaml_file, 'w') as fh:
             fh.write('medium_type: eqf\n')
             for p in params:
-                fh.write(f'{p}: 42\n')
+                fh.write('{}: 42\n'.format(p))
 
         with self.assertRaises(LookupError):
             from_yaml(self.yaml_file)
@@ -69,7 +69,7 @@ class MediaLoadingTests(unittest.TestCase):
         with open(self.yaml_file, 'w') as fh:
             fh.write('medium_type: eqf\n')
             for ii, p in enumerate(params):
-                fh.write(f'{p}: {ii}\n')
+                fh.write('{}: {}\n'.format(p, ii))
 
         medium = from_yaml(self.yaml_file)
         for ii, p in enumerate(params):

@@ -63,17 +63,23 @@ class SolverTests(unittest.TestCase):
                     R_analytical,
                     result['R'][i_f],
                     NB_PLACES,
-                    f'(reflection) f={f}Hz, d={d}, theta=0'
+                    '(reflection) f={}Hz, d={}, theta=0'.format(f, d)
                 )
 
     def helper_numerical_tests(self, materials, backings, tol):
 
         for mat_name in materials:
-            mat = from_yaml(THIS_FILE_DIR+f'/materials/{mat_name}.yaml')
+            mat = from_yaml(THIS_FILE_DIR+'/materials/{}.yaml'.format(mat_name))
 
             for (backing_type, backing_func) in backings:
                 for d in THICKNESSES:
-                    reference = np.loadtxt(THIS_FILE_DIR+f'/references/{mat_name}_{int(d*1e3)}mm_{backing_type}.csv')
+                    reference = np.loadtxt(
+                        THIS_FILE_DIR+'/references/{}_{}mm_{}.csv'.format(
+                            mat_name,
+                            int(d*1e3),
+                            backing_type
+                        )
+                    )
 
                     for l in reference:
                         S = Solver()
@@ -99,14 +105,19 @@ class SolverTests(unittest.TestCase):
 
     def helper_bi_mat(self, mat1_name, mat2_name, backings, tol):
 
-        mat1 = from_yaml(THIS_FILE_DIR+f'/materials/{mat1_name}.yaml')
-        mat2 = from_yaml(THIS_FILE_DIR+f'/materials/{mat2_name}.yaml')
+        mat1 = from_yaml(THIS_FILE_DIR+'/materials/{}.yaml'.format(mat1_name))
+        mat2 = from_yaml(THIS_FILE_DIR+'/materials/{}.yaml'.format(mat2_name))
 
-        prefix = f'{mat1_name}_{mat2_name}'
+        prefix = '{}_{}'.format(mat1_name, mat2_name)
 
         for (backing_type, backing_func) in backings:
             for (d1, d2) in itertools.product(THICKNESSES, THICKNESSES):
-                filename = THIS_FILE_DIR+f'/references/{prefix}_{int(d1*1e3)}mm_{int(d2*1e3)}mm_{backing_type}.csv'
+                filename = THIS_FILE_DIR+'/references/{}_{}mm_{}mm_{}.csv'.format(
+                    prefix,
+                    int(d1*1e3),
+                    int(d2*1e3),
+                    backing_type
+                )
                 if not os.path.exists(filename):
                     continue
 
@@ -137,12 +148,17 @@ class SolverTests(unittest.TestCase):
     def helper_numerical_tests_eqf(self, materials, backings, tol):
 
         for mat_name in materials:
-            mat = from_yaml(THIS_FILE_DIR+f'/materials/{mat_name}.yaml', force=EqFluidJCA)
+            mat = from_yaml(THIS_FILE_DIR+'/materials/{}.yaml'.format(mat_name), force=EqFluidJCA)
 
             for (backing_type, backing_func) in backings:
                 for d in THICKNESSES:
                     for a in ANGLES:
-                        reference = np.loadtxt(THIS_FILE_DIR+f'/references/eqf/{mat_name}_{int(d*1e3)}mm_{backing_type}_{a}deg.PW')
+                        reference = np.loadtxt(THIS_FILE_DIR+'/references/eqf/{}_{}mm_{}_{}deg.PW'.format(
+                            mat_name,
+                            int(d*1e3),
+                            backing_type,
+                            a
+                        ))
 
                         for l in reference:
                             S = Solver()
@@ -152,32 +168,33 @@ class SolverTests(unittest.TestCase):
 
                             self.assertAlmostEqual(
                                 result['R'][0], l[2]+1j*l[3], tol,
-                                f'(reflection) {mat_name} : f={l[0]}Hz angle={a}deg d={d:2.3f}m'
+                                '(reflection) {}: f={}Hz angle={}deg d={:2.3f}m'.format( mat_name, l[0], a, d)
                             )
                             if backing_func == backing.transmission:
                                 self.assertAlmostEqual(
                                     result['T'][0], l[5]+1j*l[6], tol,
-                                    f'(transmission) {mat_name} : f={l[0]}Hz angle={a}deg d={d:2.3f}m'
+                                    '(transmission) {}: f={}Hz angle={}deg d={:2.3f}m'.format( mat_name, l[0], a, d)
                                 )
 
     def helper_bi_mat_eqf(self, mat1_name, mat2_name, backings, tol, no_is_default=-1, ref_path='eqf'):
 
         if no_is_default == 1:
-            mat1 = from_yaml(THIS_FILE_DIR+f'/materials/{mat1_name}.yaml')
+            mat1 = from_yaml(THIS_FILE_DIR+'/materials/{}.yaml'.format(mat1_name))
         else:
-            mat1 = from_yaml(THIS_FILE_DIR+f'/materials/{mat1_name}.yaml', force=EqFluidJCA)
+            mat1 = from_yaml(THIS_FILE_DIR+'/materials/{}.yaml'.format(mat1_name), force=EqFluidJCA)
 
         if no_is_default == 2:
-            mat2 = from_yaml(THIS_FILE_DIR+f'/materials/{mat2_name}.yaml')
+            mat2 = from_yaml(THIS_FILE_DIR+'/materials/{}.yaml'.format(mat2_name))
         else:
-            mat2 = from_yaml(THIS_FILE_DIR+f'/materials/{mat2_name}.yaml', force=EqFluidJCA)
+            mat2 = from_yaml(THIS_FILE_DIR+'/materials/{}.yaml'.format(mat2_name), force=EqFluidJCA)
 
-        prefix = f'{mat1_name}_{mat2_name}'
+        prefix = '{}_{}'.format(mat1_name, mat2_name)
 
         for (backing_type, backing_func) in backings:
             for (d1, d2) in itertools.product(THICKNESSES, THICKNESSES):
                 for a in ANGLES:
-                    filename = THIS_FILE_DIR+f'/references/{ref_path}/{prefix}_{int(d1*1e3)}mm_{int(d2*1e3)}mm_{backing_type}_{a}deg.PW'
+                    filename = THIS_FILE_DIR+'/references/{}/{}_{}mm_{}mm_{}_{}deg.PW'.format(
+                        ref_path, prefix, int(d1*1e3), int(d2*1e3), backing_type, a)
                     if not os.path.exists(filename):
                         continue
 
@@ -191,12 +208,16 @@ class SolverTests(unittest.TestCase):
 
                         self.assertAlmostEqual(
                             result['R'][0], l[2]+1j*l[3], tol,
-                            f'(reflection) {mat1_name} {mat2_name} : f={l[0]}Hz angle={a}deg d1={d1:2.3f}m d2={d2:2.3f}m'
+                            '(reflection) {} {} : f={}Hz angle={}deg d1={:2.3f}m d2={:2.3f}m'.format(
+                                mat1_name, mat2_name, l[0], a, d1, d2
+                            )
                         )
                         if backing_func == backing.transmission:
                             self.assertAlmostEqual(
                                 result['T'][0], l[5]+1j*l[6], tol,
-                                f'(transmission) {mat1_name} {mat2_name} : f={l[0]}Hz angle={a}deg d1={d1:2.3f}m d2={d2:2.3f}m'
+                                '(transmission) {} {} : f={}Hz angle={}deg d1={:2.3f}m d2={:2.3f}m'.format(
+                                    mat1_name, mat2_name, l[0], a, d1, d2
+                                )
                             )
 
     def test_foams_eqf(self):
