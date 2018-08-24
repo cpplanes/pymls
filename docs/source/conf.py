@@ -53,7 +53,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'pymls: Python Plane Waves Solver'
-copyright = '2018, The pymls authors"
+copyright = '2018, The pymls authors'
 author = 'O. Dazel, M. Gaborit, P. Göransson'
 
 # The version info for the project you're documenting, acts as replacement for
