@@ -33,6 +33,10 @@ from pymls.media import Air
 
 
 class IncompleteDefinitionError(Exception):
+    """
+    Exception raised when attempting to solve an incomplete system
+
+    Either missing layers definition or no backing will produce such an error."""
 
     def __init__(self, msg='The definition is incomplete and no analysis can be performed'):
         super().__init__(msg)
@@ -41,9 +45,40 @@ class IncompleteDefinitionError(Exception):
 class Solver(object):
     """
     Stores a system to solve and parameters for the analysis.
-    Performs analysis and gives back raw unmodified/cleaned results.
 
-    All post-processing should be done *out* of this class
+    Performs analysis and gives back raw unmodified/cleaned results.
+    All post-processing should be done *out* of this class.
+
+    Parameters
+    ----------
+
+    layers : list of Layer/StochasticLayer instances
+        The right most layer appears last in the list.
+    backing : function reference from `pymls.backing`
+        Describe the type of backing condition
+    media : list of Media subclasses, optional
+        Stores all media used in the system for later reference
+    analyses : list of Analysis instances, optional
+        If only one instance is provided with a list, the constructor
+        will wrap it into a list.
+
+    Attributes
+    ----------
+
+    media : list of Media subclasses, optional
+    layers : list of Layer/StochasticLayer instances
+    backing : function reference from `pymls.backing`
+    analyses : list of Analysis instances, optional
+    resultset : list of dict
+        Contains the results for all analysis and metadata
+
+    Methods
+    -------
+
+    solve(frequencies, angles, n_draws, prng_state) : list of dict
+        Starts the solving process w/w stochastic parameters.
+    check_is_complete() : bool
+        Check that all required data has been provided and gathers media.
     """
 
     def __init__(self, media=None, analyses=None, layers=None, backing=None):
@@ -60,7 +95,19 @@ class Solver(object):
         self.resultset = []
 
     def check_is_complete(self):
-        """ Checks that all the required data has been provided. """
+        """
+        Check that all required data has been provided and gathers media.
+
+        Returns
+        -------
+        bool
+            True if the described is complete and ready to be solved.
+
+        Raises
+        ------
+        IncompleteDefinitionError
+            If the system is incomplete (missing layer or backing)
+        """
         # not empty layer list
         if not self.layers:
             raise IncompleteDefinitionError("Empty layer list")
@@ -74,7 +121,36 @@ class Solver(object):
 
         return True
 
-    def solve(self, frequencies=None, angles=0, n_draws=1000, prng_state=None):
+    def solve(self, frequencies=None, angles=0, n_draws=1000, prng_state=None, store=False):
+        """
+        Starts the solving process w/w stochastic parameters.
+
+        The function looks for `StochasticLayer` instances in the `layers` list and flag
+        them. It creates an `Analysis` if all parameters are provided upon call and runs
+        the corresponding solver functions for all registered analysis, gathering results
+        in `resultset`.
+
+        Parameters
+        ----------
+        frequencies : list, optional
+            list of frequency where to compute the analysis. If it isn't provided and no
+            `Analysis` has been registered before hand, the function will return nothing.
+        angles : optional
+            Defaults to 0. Can be a list or anything `Analysis` can parse to an iterable.
+        n_draws : int
+            Number of draws for the stochastic analyses.
+        prng_state : tuple
+            Saved state for Numpy's pseudo random number generator (see `numpy.random.get_state`)
+
+        .. _numpy.random.get_state: https://docs.scipy.org/doc/numpy/reference/generated/numpy.random.get_state.html
+
+        Returns
+        -------
+        resultset : dict or list of dict
+            Set of all computed results and relevant metadata provided as a dict for easy
+            serialisation.
+        """
+
         self.check_is_complete()
 
         self.n_draws = n_draws
@@ -108,6 +184,50 @@ class Solver(object):
         return self.resultset
 
     def __run_stochastic_analysis(self, a):
+        """ Runs a stochastic solver for `Analysis` `a` with stochastic layers
+
+        Note that it will run the analysis for each stochastic layer separately, re
+        initialising the PRNG state between two runs.
+
+        Parameters
+        ----------
+        a : Analysis
+            The one to be run.
+
+        Returns
+        -------
+        partial_resultset : list of dict
+            Return a list of all result dicts computed
+
+        Notes
+        -----
+
+        The result dict has the following structure:
+
+        .. code-block:: python
+            result = {
+                'name': str_var,
+                'enable_stochastic': bool_var,
+                'stochastics': {
+                    'layer': int_id,  # index of the layer simulated
+                    'param':  str_param,  # variated parameter
+                    'values': [],  # values of the parameters
+                },
+                'f': freqs_vect,
+                'angle': angles_vect,
+                'R': [],  # reflection coefficient per freq
+                'T': [],  # transmission coefficient per freq
+            }
+
+        `R` and `T` are matrices (rows corresponding to the freqs/angles axis, columns to
+        the draws)
+
+        See Also
+        --------
+
+        layers.layer.StochasticLayer
+            For stochastic layer definition
+        """
         partial_resultset = []
         analysis_size = len(a.freqs)*len(a.angles)
 
@@ -142,6 +262,34 @@ class Solver(object):
         return partial_resultset
 
     def __run__analysis(self, a):
+        """ Runs a solver for `Analysis` `a`
+
+        Parameters
+        ----------
+        a : Analysis
+            The one to be run.
+
+        Returns
+        -------
+        result : dict
+            Return the result of the computation and metadata in a dict format
+
+        Notes
+        -----
+
+        The result dict has the following structure:
+
+        .. code-block:: python
+            result = {
+                'name': str_var,
+                'enable_stochastic': bool_var,
+                'f': freqs_vect,
+                'angle': angles_vect,
+                'R': [],  # reflection coefficient per freq
+                'T': [],  # transmission coefficient per freq
+            }
+
+        """
         self.n_analyses += 1
         result = {
             'name': a.name,
@@ -161,11 +309,28 @@ class Solver(object):
         return result
 
     def __reinit_stochastic_solver(self):
+        """ Utility function to re-initialise the solver between two stochastic analyses. """
         np.random.set_state(self.prng_state)
         for _,l in self.stochastic_layers:
             l.reinit()
 
     def __solve_one_frequency(self, frequency, theta_inc):
+        """ Solve for one frequency `frequency` and one angle `theta_inc`
+
+        Parameters
+        ----------
+        frequency :
+            Frequency for the resolution
+        theta_inc :
+            Angle of incidence for the resolution
+
+        Returns
+        -------
+        reflx_coefficient : complex
+            Reflection coefficient
+        trans_coefficient : complex or None
+            Transmission coefficient
+        """
 
         omega = frequency*2*np.pi
 

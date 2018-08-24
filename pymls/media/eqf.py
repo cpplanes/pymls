@@ -29,6 +29,54 @@ from .air import Air
 
 
 class EqFluidJCA(Medium):
+    """ Represents an equivalent fluid medium with the Johnson-Champoux-Allard approach
+
+    The Johnson-Champoux-Allard model is described in references [1]_, [2]_ and [3]_.
+
+    Attributes
+    ----------
+    phi : float
+        Porosity
+    sigma : float
+        Flow resistivity
+    alpha : float
+        Tortuosity
+    Lambda_prime : float
+        Thermal characteristic length
+    Lambda : float
+        Viscous characteristic length
+    rho_1 : float
+        Mass of solid per unit volume of aggregate
+    nu : float
+        poisson ratio
+    E : float
+        Young's modulus
+    eta : float
+        viscosity
+
+    Notes
+    -----
+
+    Populates the instance with the following attributes (and a few others left undocumented)
+
+    `rho_eq_til`
+        Frequency dependent equivalent density
+    `alpha_til`
+        Frequency dependent Johnson's tortuosity
+    `alpha_prime_til`
+        Frequency dependent Champoux-Allard's tortuosity
+    `K_eq_til`
+        Frequency dependent equivalent compressibility
+    `c_eq_til`
+        Frequency dependent equivalent speed of sound
+
+    References
+    ----------
+
+    .. [1] D. L. Johnson *et al.*, "Theory of dynamic permeability and tortuosity in fluid-saturated porous media", Journal of fluid mechanics 176(1), 1987.
+    .. [2] Y. Champoux & J.-F. Allard, "Dynamic tortuosity and bulk modulus in air-saturated porous media", Journale of Applied Physics, 1975, DOI: 10.1063/1.349482.
+    .. [3] J.-F. Allard & N. Atalla, "Propagation of Sound in porous media: modelling sound absorbing materials", Wiley, 2009, ISBN: 978-0-470-74661-5.
+    """
 
     MEDIUM_TYPE = 'eqf'
     MODEL = 'fluid'
@@ -59,9 +107,20 @@ class EqFluidJCA(Medium):
         self.eta = None
 
     def _compute_missing(self):
+        """ Computes the required constant parameters missing from the definition
+
+        For a JCA equivalent fluid, the shear modulus `N` is computed."""
         self.N = self.E/(2*(1+self.nu))
 
     def update_frequency(self, omega):
+        """ Computes the JCA parameters (see Notes on the class).
+
+        Parameters
+        ----------
+
+        omega :
+            Circular frequency of interest
+        """
 
         #  Johnson et al model for rho_eq_til
         self.omega_0 = self.sigma*self.phi/(Air.rho*self.alpha)

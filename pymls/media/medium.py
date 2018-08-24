@@ -23,7 +23,27 @@
 
 
 class Medium(object):
-    """ Holds a medium definition and allows its manipulation and loading """
+    """ Base class for medium definition and manipulation
+
+    All derived classes have a few class parameters explained below.
+
+    Attributes
+    ----------
+
+    EXPECTED_PARAMS, OPT_PARAMS : list of tuple, class attribute
+        List of all expected parameters (resp. optional parameters) for this medium to be well defined.
+        The format is `(param_name, param_type)` where `param_name` is a `str` and
+        `param_type` a `type`.
+    MEDIUM_TYPE : str, class attribute
+        State the type of medium , used to determine the real physics hidden in the medium
+        (to distinguish a fluid from and equivalent fluid for instance)
+    MODEL : str, class attribute
+        State which type of propagation model to use.
+    name : str
+        Medium's name (default to Generic Medium)
+    omega : positive float or -1
+        Last circular frequency for which the parameters have been updated
+    """
 
     EXPECTED_PARAMS = []
     OPT_PARAMS = []
@@ -42,15 +62,41 @@ class Medium(object):
         )
 
     def update_frequency(self, omega):
-        """ Computes parameters' value for the given circular frequency """
+        """ Computes parameters' value for the given circular frequency
+
+        Notes
+        -----
+
+        Implemented in derived classes
+        """
         pass
 
     def _compute_missing(self):
+        """ Computes the required constant parameters missing from the definition
+
+        Notes
+        -----
+
+        Implemented in derived classes
+        """
         pass
 
     def from_dict(self, parameters):
         """Reads medium definition from a hashmap of params.
-        Raises a LookupError if the parameter definition is incomplete."""
+
+        Load all possible & recognised parameters and run `_compute_missing` to complete
+        the definition.
+
+        Parameters
+        ----------
+        parameters : dict
+            Linking parameter names and values.
+
+        Raises
+        ------
+        LookupError
+            If the parameter definition is incomplete (missing parameters listed in EXPECTED_PARAMS).
+        """
 
         for param, param_type in self.__class__.EXPECTED_PARAMS:
             param_value = parameters.get(param)

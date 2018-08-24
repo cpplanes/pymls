@@ -26,6 +26,16 @@ from .medium import Medium
 
 
 class Fluid(Medium):
+    """ Represent a fluid medium
+
+    Attributes
+    ----------
+
+    rho : float
+        density
+    c : float
+        sound speed
+    """
 
     MEDIUM_TYPE = 'fluid'
     MODEL = MEDIUM_TYPE
@@ -35,10 +45,12 @@ class Fluid(Medium):
     ]
 
     def __init__(self):
+        """ Nothing special todo for fluid """
         super().__init__()
 
         self.rho = None
         self.c = None
 
     def update_frequency(self, omega):
+        """ For a fluid, does nothing."""
         self.omega = omega
