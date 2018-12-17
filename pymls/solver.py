@@ -121,7 +121,7 @@ class Solver(object):
 
         return True
 
-    def solve(self, frequencies=None, angles=0, n_draws=1000, prng_state=None, store=False):
+    def solve(self, frequencies=None, angles=0, n_draws=1000, prng_state=None):
         """
         Starts the solving process w/w stochastic parameters.
 
