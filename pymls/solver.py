@@ -152,6 +152,7 @@ class Solver(object):
         """
 
         self.check_is_complete()
+        self.resultset = []
 
         self.n_draws = n_draws
         self.stochastic_layers = list(filter(
@@ -162,13 +163,12 @@ class Solver(object):
             self.prng_state = np.random.get_state()
 
         if frequencies is not None:
-            self.analyses.append(
-                Analysis(
-                    'auto',
-                    frequencies,
-                    angles,
-                    len(self.stochastic_layers) > 0
-                ))
+            self.analyses = [Analysis(
+                'auto',
+                frequencies,
+                angles,
+                len(self.stochastic_layers) > 0
+            )]
 
         self.n_analyses = 0
         for a in self.analyses:
@@ -179,9 +179,10 @@ class Solver(object):
                 result = self.__run__analysis(a)
                 self.resultset.append(result)
 
-        if self.n_analyses == 1:
-            self.resultset = self.resultset[0]
-        return self.resultset
+        if len(self.resultset) == 1:
+            return self.resultset[0]
+        else:
+            return self.resultset
 
     def __run_stochastic_analysis(self, a):
         """ Runs a stochastic solver for `Analysis` `a` with stochastic layers
