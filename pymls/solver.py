@@ -413,3 +413,99 @@ class Solver(object):
             trans_coefficient = None
 
         return (reflx_coefficient, trans_coefficient)
+
+    def compute_fields(self, layer_id, frequency, theta_inc):
+        """ Returns the backpropagation matrix from the first interface to layer num.
+        `layer_id`.
+
+        Parameters
+        ----------
+        frequency : float
+            frequency at which backprop is computed
+        theta_inc :
+            angle of incidence
+        layer_id : int
+            id of the layer up to which backpropagate
+
+        Returns
+        -------
+        layer_func : callable
+            Function to get the propagation in the layer
+
+        Raises
+        ------
+        ValueError :
+            if the id is invalid
+        """
+
+        if layer_id >= len(self.layers):
+            raise ValueError("Supplied layer's id is out of range.")
+
+        omega = frequency*2*np.pi
+
+        for L in self.layers:
+            L.update_frequency(omega)
+
+        # compute k_x
+        k_x = omega/Air.c*np.sin(theta_inc*np.pi/180)
+
+        # load the backing vector to initiate recursion
+        Omega_plus = self.backing(omega, k_x)
+
+        # goes backward (from last to first layer) and compute successive
+        # Omega_plus/minus
+        back_prop = None
+        for invertedi_L, L in enumerate(self.layers[::-1]):
+
+            i_L = len(self.layers)-invertedi_L-1
+
+            if invertedi_L == 0:  # right-most layer
+                interface_func = generic_interface(L.medium, Air)
+            else:
+                interface_func = generic_interface(L.medium, self.layers[i_L+1].medium)
+
+            if interface_func is not None:
+                (Omega_moins, tau) = interface_func(Omega_plus)
+            else:
+                Omega_moins = Omega_plus
+                tau = np.eye(int(len(Omega_moins)/2))
+
+            layer_func = generic_layer(L.medium)
+            (Omega_plus, xi) = layer_func(Omega_moins, omega, k_x, L.medium, L.thickness)
+
+            if i_L < layer_id:  # Store the backprop to the desired layer
+                back_prop = tau.dot(xi) if back_prop is None else back_prop.dot(tau).dot(xi)
+            if i_L == layer_id:
+                omega_plus_target = Omega_plus
+
+        # last interface
+        interface_func = generic_interface(Air, self.layers[0].medium)
+        if interface_func is not None:
+            (Omega_moins, tau) = interface_func(Omega_plus)
+        else:
+            Omega_moins = Omega_plus
+            tau = np.eye(int(len(Omega_moins)/2))
+        back_prop = tau if layer_id == 0 else back_prop.dot(tau)
+
+        # Solve for the first layer
+        k_air = omega*sqrt(Air.rho/Air.K)
+        k_z = sqrt(k_air**2-k_x**2)
+        u_z = 1j*k_z/(Air.rho*omega**2)
+
+        Omega_0_fluid = np.matrix([
+            [-u_z],
+            [-1]
+        ])
+        S_fluid = np.matrix([
+            [-u_z],
+            [1]
+        ])
+
+        temp = np.array([
+            [Omega_moins[0,0], Omega_0_fluid[0,0]],
+            [Omega_moins[1,0], Omega_0_fluid[1,0]]
+        ])
+        X = np.linalg.inv(temp).dot(S_fluid)
+        S = omega_plus_target.dot(back_prop)*X[0,0]
+
+        return S.reshape((max(S.shape,)))
