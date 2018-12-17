@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.4.7] - 2018/12/17
+
+### Changed
+
+- call to `Solver.solve()` leading to a single resultset will return directly this
+		resultset and not a 1-element list containing it
+
+### Added
+
+- the function `Solver.compute_fields()` allows to compute the fields at any interface of
+		the multilayer
+- tests and some documentation
+- CI
+
+## [1.4.6] - 2018/08/20
+
+### Fixed
+
+- Dependencies issues
+
 ## [1.4.5] - 2018/05/17
 
 ### Added
