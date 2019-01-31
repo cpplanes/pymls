@@ -1,12 +1,12 @@
 #! /usr/bin/env python
 # -*- coding:utf8 -*-
 #
-# __init__.py
+# draws_manager.py
 #
 # This file is part of pymls, a software distributed under the MIT license.
 # For any question, please contact one of the authors cited below.
 #
-# Copyright (c) 2017
+# Copyright (c) 2019
 # 	Olivier Dazel <olivier.dazel@univ-lemans.fr>
 # 	Mathieu Gaborit <gaborit@kth.se>
 # 	Peter Göransson <pege@kth.se>
@@ -22,7 +22,27 @@
 # copies or substantial portions of the Software.
 #
 
-from .yaml_loader import YamlLoader
-from .hdf5_export import hdf5_export
-from .indicators import *
-from .draws_manager import draws_manager
+class DrawsManager(object):
+    """Encapsulates the handling of PDF for StochasticLayer"""
+
+    def __init__(self, draws, mean, std):
+        self.draws = draws
+        self.N = len(draws)
+        self.mean = mean
+        self.std = std
+        self.n = 0
+
+    def as_pdf(self):
+        if self.n == self.N:
+            raise ValueError('The distribution has  only {} samples.'.format(self.N))
+        else:
+            val = self.mean+self.draws[self.n]*self.std
+            self.n += 1
+            return float(val)
+
+    def reset(self):
+        self.n = 0
+
+    def __len__(self):
+        return self.N
+
