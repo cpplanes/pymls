@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.4.8] - 2019/02/26
+
+### Changed
+
+- Some of the parameters set as mandatory for EqF are now optional... as in the
+		underlying theory
+
+### Added
+
+- a DrawsManager class as been added to help with stochastic layers
+
+
 ## [1.4.7] - 2018/12/17
 
 ### Changed
