@@ -22,6 +22,7 @@
 # copies or substantial portions of the Software.
 #
 
+
 class DrawsManager(object):
     """Encapsulates the handling of PDF for StochasticLayer"""
 
@@ -45,4 +46,3 @@ class DrawsManager(object):
 
     def __len__(self):
         return self.N
-
