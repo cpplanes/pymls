@@ -45,14 +45,6 @@ class EqFluidJCA(Medium):
         Thermal characteristic length
     Lambda : float
         Viscous characteristic length
-    rho_1 : float
-        Mass of solid per unit volume of aggregate
-    nu : float
-        poisson ratio
-    E : float
-        Young's modulus
-    eta : float
-        viscosity
 
     Notes
     -----
@@ -86,6 +78,9 @@ class EqFluidJCA(Medium):
         ('alpha', float),  # Tortuosity
         ('Lambda_prime', float),  # Thermal characteristic length
         ('Lambda', float),  # Viscous characteristic length
+    ]
+
+    OPT_PARAMS = [
         ('rho_1', float),  # Mass of solid per unit volume of aggregate
         ('nu', float),  # poisson ratio
         ('E', float),  # Young's modulus
@@ -100,17 +95,12 @@ class EqFluidJCA(Medium):
         self.alpha = None
         self.Lambda_prime = None
         self.Lambda = None
-        self.rho_1 = None
-        self.nu = None
-        self.E = None
-        self.N = None
-        self.eta = None
 
     def _compute_missing(self):
         """ Computes the required constant parameters missing from the definition
 
         For a JCA equivalent fluid, the shear modulus `N` is computed."""
-        self.N = self.E/(2*(1+self.nu))
+        pass
 
     def update_frequency(self, omega):
         """ Computes the JCA parameters (see Notes on the class).
