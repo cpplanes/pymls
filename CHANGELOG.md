@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.4.9] - 2019/02/26
+
+### Fixed
+
+- Minor bugs and typos in tests and code
+
 ## [1.4.8] - 2019/02/26
 
 ### Changed
