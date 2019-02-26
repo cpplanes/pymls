@@ -51,8 +51,7 @@ class MediaLoadingTests(unittest.TestCase):
             from_yaml(self.yaml_file)
 
     def test_missing_parameter(self):
-        params = ['phi', 'sigma', 'alpha', 'Lambda_prime', 'Lambda',
-                  'rho_1', 'nu', 'E']
+        params = ['phi', 'sigma', 'alpha', 'Lambda_prime']
 
         with open(self.yaml_file, 'w') as fh:
             fh.write('medium_type: eqf\n')
