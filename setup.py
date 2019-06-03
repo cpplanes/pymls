@@ -28,7 +28,7 @@ with open('README.rst', 'r') as fh:
     long_description = fh.read()
 
 setup(name='pymls',
-    version='1.4.9',
+    version='1.4.10',
     description='Acoustic multilayer solver in Python',
     long_description=long_description,
     url='https://github.com/cpplanes/pymls',
@@ -43,7 +43,7 @@ setup(name='pymls',
     ],
     install_requires=[
         'numpy>=1.13.1',
-        'PyYAML>=3.12',
+        'PyYAML>=5.1',
     ],
     extras_require={
         'HDF5 export': ['h5py>=2.7.1']
