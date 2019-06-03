@@ -30,6 +30,9 @@ from .interfaces import\
     pem_fluid_interface,\
     elastic_pem_interface,\
     pem_elastic_interface
+from .interfaces_rigid import\
+    pem_rigid_interface,\
+    elastic_rigid_interface
 
 
 def generic_interface(medium_left, medium_right):
@@ -64,3 +67,15 @@ def generic_interface(medium_left, medium_right):
             return pem_elastic_interface
         if medium_right.MODEL == 'pem':
             return None
+
+def rigid_interface(medium):
+    """
+    Returns a callable to the interface function corresponding to the given media.
+    """
+
+    if medium.MODEL == 'fluid':
+        return None
+    if medium.MODEL == 'elastic':
+        return elastic_rigid_interface
+    if medium.MODEL == 'pem':
+        return pem_rigid_interface

@@ -26,7 +26,7 @@ import numpy as np
 from numpy.lib.scimath import sqrt
 
 from pymls.analysis import Analysis
-from pymls.interface.utils import generic_interface
+from pymls.interface.utils import generic_interface, rigid_interface
 from pymls.layers import generic_layer, StochasticLayer
 import pymls.backing as backing
 from pymls.media import Air
@@ -352,7 +352,10 @@ class Solver(object):
             i_L = len(self.layers)-invertedi_L-1
 
             if invertedi_L == 0:  # right-most layer
-                interface_func = generic_interface(L.medium, Air)
+                if self.backing == backing.transmission:
+                    interface_func = generic_interface(L.medium, Air)
+                else:
+                    interface_func = rigid_interface(L.medium)
             else:
                 interface_func = generic_interface(
                     L.medium,
