@@ -33,7 +33,7 @@ def pem_rigid_interface(O):
     Omega_moins[0,1] = 1
     Omega_moins[3,2] = 1
 
-    Tau_tilde = 0;
+    Tau_tilde = 0
 
     return (Omega_moins, Tau_tilde)
 

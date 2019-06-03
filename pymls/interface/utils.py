@@ -68,6 +68,7 @@ def generic_interface(medium_left, medium_right):
         if medium_right.MODEL == 'pem':
             return None
 
+
 def rigid_interface(medium):
     """
     Returns a callable to the interface function corresponding to the given media.
