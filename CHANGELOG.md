@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.4.10] - 2019/06/03
+
+### Changed
+
+- The handling of rigid backing condition has been improved for PEM (the
+	previous one would give inaccurate results in some cases)
+
+### Fixed
+
+- Github-reported security issues in requirements.txt
+- Bumped PyYAML version in setup for security reasons (CVE-2017-18342)
+
 ## [1.4.9] - 2019/02/26
 
 ### Fixed
