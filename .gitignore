@@ -21,3 +21,6 @@ __pycache__/
 # sphinx build & log
 docs/log
 docs/build
+
+# ignore test files in-dev
+/test_*.py
