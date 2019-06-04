@@ -1,5 +1,5 @@
 pymls: Python Plane Waves Solver
-===============================
+================================
 
 pymls allows to solve acoustic propagation problems through structures with multiple layers
 using Dazel *et al.*'s method as described in "A stable to model the acoustic response of
