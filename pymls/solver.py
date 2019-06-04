@@ -363,13 +363,13 @@ class Solver(object):
                 )
 
             if interface_func is not None:
-                (Omega_moins, tau) = interface_func(Omega_plus)
+                (Omega_minus, tau) = interface_func(Omega_plus)
             else:
-                Omega_moins = Omega_plus
-                tau = np.eye(int(len(Omega_moins)/2))
+                Omega_minus = Omega_plus
+                tau = np.eye(int(len(Omega_minus)/2))
 
             layer_func = generic_layer(L.medium)
-            (Omega_plus, xi) = layer_func(Omega_moins, omega, k_x, L.medium, L.thickness)
+            (Omega_plus, xi) = layer_func(Omega_minus, omega, k_x, L.medium, L.thickness)
 
             if self.backing == backing.transmission:
                 back_prop = back_prop.dot(tau).dot(xi)
@@ -377,11 +377,11 @@ class Solver(object):
         # last interface
         interface_func = generic_interface(Air, self.layers[0].medium)
         if interface_func is not None:
-            (Omega_moins, tau) = interface_func(Omega_plus)
+            (Omega_minus, tau) = interface_func(Omega_plus)
 
         else:
-            Omega_moins = Omega_plus
-            tau = np.eye(int(len(Omega_moins)/2))
+            Omega_minus = Omega_plus
+            tau = np.eye(int(len(Omega_minus)/2))
 
         if self.backing == backing.transmission:
             back_prop = back_prop.dot(tau)
@@ -401,16 +401,16 @@ class Solver(object):
         ])
 
         temp = np.array([
-            [Omega_moins[0,0], Omega_0_fluid[0,0]],
-            [Omega_moins[1,0], Omega_0_fluid[1,0]]
+            [Omega_minus[0,0], Omega_0_fluid[0,0]],
+            [Omega_minus[1,0], Omega_0_fluid[1,0]]
         ])
         X = np.linalg.inv(temp).dot(S_fluid)
 
         reflx_coefficient = X[1,0]
-        X_0_moins = X[0,0]
+        X_0_minus = X[0,0]
 
         if self.backing == backing.transmission:
-            trans_coefficient = back_prop*X_0_moins
+            trans_coefficient = back_prop*X_0_minus
             trans_coefficient = trans_coefficient[0,0]
         else:
             trans_coefficient = None
@@ -468,13 +468,13 @@ class Solver(object):
                 interface_func = generic_interface(L.medium, self.layers[i_L+1].medium)
 
             if interface_func is not None:
-                (Omega_moins, tau) = interface_func(Omega_plus)
+                (Omega_minus, tau) = interface_func(Omega_plus)
             else:
-                Omega_moins = Omega_plus
-                tau = np.eye(int(len(Omega_moins)/2))
+                Omega_minus = Omega_plus
+                tau = np.eye(int(len(Omega_minus)/2))
 
             layer_func = generic_layer(L.medium)
-            (Omega_plus, xi) = layer_func(Omega_moins, omega, k_x, L.medium, L.thickness)
+            (Omega_plus, xi) = layer_func(Omega_minus, omega, k_x, L.medium, L.thickness)
 
             if i_L < layer_id:  # Store the backprop to the desired layer
                 back_prop = tau.dot(xi) if back_prop is None else back_prop.dot(tau).dot(xi)
@@ -484,10 +484,10 @@ class Solver(object):
         # last interface
         interface_func = generic_interface(Air, self.layers[0].medium)
         if interface_func is not None:
-            (Omega_moins, tau) = interface_func(Omega_plus)
+            (Omega_minus, tau) = interface_func(Omega_plus)
         else:
-            Omega_moins = Omega_plus
-            tau = np.eye(int(len(Omega_moins)/2))
+            Omega_minus = Omega_plus
+            tau = np.eye(int(len(Omega_minus)/2))
         back_prop = tau if layer_id == 0 else back_prop.dot(tau)
 
         # Solve for the first layer
@@ -505,8 +505,8 @@ class Solver(object):
         ])
 
         temp = np.array([
-            [Omega_moins[0,0], Omega_0_fluid[0,0]],
-            [Omega_moins[1,0], Omega_0_fluid[1,0]]
+            [Omega_minus[0,0], Omega_0_fluid[0,0]],
+            [Omega_minus[1,0], Omega_0_fluid[1,0]]
         ])
         X = np.linalg.inv(temp).dot(S_fluid)
         S = omega_plus_target.dot(back_prop)*X[0,0]

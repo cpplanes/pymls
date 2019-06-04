@@ -26,7 +26,7 @@ import numpy as np
 from numpy.lib.scimath import sqrt
 
 
-def transfert_pem(Omega_moins, omega, k_x, medium, d):
+def transfert_pem(Omega_minus, omega, k_x, medium, d):
 
     beta_1 = sqrt(medium.delta_1**2-k_x**2)
     beta_2 = sqrt(medium.delta_2**2-k_x**2)
@@ -108,7 +108,7 @@ def transfert_pem(Omega_moins, omega, k_x, medium, d):
 
     alpha_prime = Phi.dot(Lambda).dot(Phi_inv)
 
-    xi_prime = Phi_inv[:2,:] @ Omega_moins
+    xi_prime = Phi_inv[:2,:] @ Omega_minus
     xi_prime = np.concatenate([xi_prime, np.array([[0,0,1]])])  # TODO
     xi_prime_lambda = np.linalg.inv(xi_prime).dot(np.diag([
         np.exp((lambda_[2]-lambda_[0])*d),
@@ -116,7 +116,7 @@ def transfert_pem(Omega_moins, omega, k_x, medium, d):
         1
     ]))
 
-    Omega_plus = alpha_prime.dot(Omega_moins).dot(xi_prime_lambda)
+    Omega_plus = alpha_prime.dot(Omega_minus).dot(xi_prime_lambda)
     Omega_plus[:,0] += Phi[:,0]
     Omega_plus[:,1] += Phi[:,1]
 

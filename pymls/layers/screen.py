@@ -25,7 +25,7 @@
 import numpy as np
 
 
-def transfert_screen(Omega_moins, omega, k_x, m, d):
+def transfert_screen(Omega_minus, omega, k_x, m, d):
 
     # For reference: the full alpha matrix
     # alpha = np.array([
@@ -47,7 +47,7 @@ def transfert_screen(Omega_moins, omega, k_x, m, d):
     ])
     T = np.eye(6) - d*alpha
 
-    Omega_plus = T @ Omega_moins
+    Omega_plus = T @ Omega_minus
     Xi = np.eye(3)
 
     return (Omega_plus, Xi)

@@ -26,7 +26,7 @@ import numpy as np
 from numpy.lib.scimath import sqrt
 
 
-def transfert_elastic(Omega_moins, omega, k_x, medium, d):
+def transfert_elastic(Omega_minus, omega, k_x, medium, d):
 
     P_mat = medium.lambda_ + 2*medium.mu
     delta_p = omega*sqrt(medium.rho/P_mat)
@@ -85,14 +85,14 @@ def transfert_elastic(Omega_moins, omega, k_x, medium, d):
 
     alpha_prime = Phi.dot(Lambda).dot(Phi_inv)
 
-    xi_prime = Phi_inv[:1,:] @ Omega_moins
+    xi_prime = Phi_inv[:1,:] @ Omega_minus
     xi_prime = np.concatenate([xi_prime, np.array([[0,1]])])  # TODO
     xi_prime_lambda = np.linalg.inv(xi_prime).dot(np.diag([
         np.exp((lambda_[1]-lambda_[0])*d),
         1
     ]))
 
-    Omega_plus = alpha_prime.dot(Omega_moins).dot(xi_prime_lambda)
+    Omega_plus = alpha_prime.dot(Omega_minus).dot(xi_prime_lambda)
     Omega_plus[:,0] += Phi[:,0]
 
     Xi = xi_prime_lambda*np.exp(-lambda_[1]*d)

@@ -71,7 +71,7 @@ def generic_interface(medium_left, medium_right):
 
 def rigid_interface(medium):
     """
-    Returns a callable to the interface function corresponding to the given media.
+    Returns a callable to the rigid backing function corresponding to the given media.
     """
 
     if medium.MODEL == 'fluid':

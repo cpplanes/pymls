@@ -27,24 +27,24 @@ import numpy as np
 
 def pem_rigid_interface(O):
 
-    Omega_moins = np.zeros((6,3), dtype=np.complex)
-    Omega_moins[2,0] = O[0]
-    Omega_moins[4,0] = O[1]
-    Omega_moins[0,1] = 1
-    Omega_moins[3,2] = 1
+    Omega_minus = np.zeros((6,3), dtype=np.complex)
+    Omega_minus[2,0] = O[0]
+    Omega_minus[4,0] = O[1]
+    Omega_minus[0,1] = 1
+    Omega_minus[3,2] = 1
 
-    Tau_tilde = 0
+    tau_tilde = 0
 
-    return (Omega_moins, Tau_tilde)
+    return (Omega_minus, tau_tilde)
 
 
 def elastic_rigid_interface(O):
 
-    Omega_moins = np.zeros((4,2), dtype=np.complex)
-    Omega_moins[1,0] = O[0]
-    Omega_moins[2,0] = -O[1]
-    Omega_moins[3,1] = 1
+    Omega_minus = np.zeros((4,2), dtype=np.complex)
+    Omega_minus[1,0] = O[0]
+    Omega_minus[2,0] = -O[1]
+    Omega_minus[3,1] = 1
 
-    Tau_tilde = 0
+    tau_tilde = 0
 
-    return (Omega_moins, Tau_tilde)
+    return (Omega_minus, tau_tilde)

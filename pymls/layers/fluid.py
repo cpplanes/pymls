@@ -26,7 +26,7 @@ import numpy as np
 from numpy.lib.scimath import sqrt
 
 
-def transfert_fluid(Omega_moins, omega, k_x, medium, d):
+def transfert_fluid(Omega_minus, omega, k_x, medium, d):
 
     if medium.MEDIUM_TYPE == 'eqf':
         rho = medium.rho_eq_til
@@ -54,8 +54,8 @@ def transfert_fluid(Omega_moins, omega, k_x, medium, d):
         [1, lambda_/(rho*omega**2)]
     ])
 
-    Omega_plus = Phi[:,0] + np.exp(-2*lambda_*d)*Phi[:,1].dot(Psi[1,:]).dot(Omega_moins) / (Psi[0,:].dot(Omega_moins))
+    Omega_plus = Phi[:,0] + np.exp(-2*lambda_*d)*Phi[:,1].dot(Psi[1,:]).dot(Omega_minus) / (Psi[0,:].dot(Omega_minus))
 
-    Xi = np.exp(-lambda_*d)/np.dot(Psi[0,:], Omega_moins)
+    Xi = np.exp(-lambda_*d)/np.dot(Psi[0,:], Omega_minus)
 
     return (Omega_plus, Xi)
