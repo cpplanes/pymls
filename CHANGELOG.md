@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5] - 2019/06/04
+
+### Changed
+
+- Code cleanup
+- Many changes over the last minors, a major seemed needed
+
 ## [1.4.10] - 2019/06/03
 
 ### Changed
