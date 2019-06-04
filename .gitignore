@@ -17,3 +17,7 @@ __pycache__/
 # coverage & tests
 .coverage
 /.pytest_cache/
+
+# sphinx build & log
+docs/log
+docs/build
