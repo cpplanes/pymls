@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.5.1] - 2019/06/07
+
+### Fixed
+
+- Fix pyYAML warning with `safe_load` instead of `load`
+
 ## [1.5] - 2019/06/04
 
 ### Changed
