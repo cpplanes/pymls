@@ -26,7 +26,7 @@ def from_yaml(filename, force=None):
         raise IOError('Unable to locate file {}'.format(filename))
 
     with open(filename) as fh:
-        yaml_data = yaml.load(fh)
+        yaml_data = yaml.safe_load(fh)
 
     if yaml_data.get('medium_type') is None and force is None:
         raise LookupError('Unspecified medium type')
