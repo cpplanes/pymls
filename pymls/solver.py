@@ -463,7 +463,10 @@ class Solver(object):
             i_L = len(self.layers)-invertedi_L-1
 
             if invertedi_L == 0:  # right-most layer
-                interface_func = generic_interface(L.medium, Air)
+                if self.backing == backing.transmission:
+                    interface_func = generic_interface(L.medium, Air)
+                else:
+                    interface_func = rigid_interface(L.medium)
             else:
                 interface_func = generic_interface(L.medium, self.layers[i_L+1].medium)
 
