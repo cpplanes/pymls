@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.5.2] - 2019/06/24
+
+### Changed
+
+- Change the backing condition used in `compute_fields`
+
 ## [1.5.1] - 2019/06/07
 
 ### Fixed
