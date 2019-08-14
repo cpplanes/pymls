@@ -41,7 +41,7 @@ class TestMediaLoading:
     def test_file_not_found(self, tmpdir):
 
         with pytest.raises(IOError):
-            from_yaml(tmpdir.join('inexistent.yaml'))
+            from_yaml(tmpdir.join('inexistent.yaml').strpath)
 
     def test_bad_medium_type(self, yaml_fn):
         with open(yaml_fn, 'w') as fh:
