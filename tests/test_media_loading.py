@@ -34,7 +34,9 @@ class TestMediaLoading:
 
     @pytest.fixture
     def yaml_fn(self, tmpdir):
-        return tmpdir.join('medium.yaml')
+        path =  tmpdir.join('medium.yaml')
+        path.ensure()
+        return path.strpath
 
     def test_file_not_found(self, tmpdir):
 
