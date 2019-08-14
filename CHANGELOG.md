@@ -4,6 +4,13 @@
 
 ### Changed
 
+  - The testsuite now uses pytest instead of unittest
+	- Parts of the code using numpy.matrix have been rewritten to use numpy.ndarray
+
+## 1.5.2 - 2019/06/24
+
+### Changed
+
   - Change the backing condition used in `compute_fields`
 
 ## 1.5.1 - 2019/06/07
