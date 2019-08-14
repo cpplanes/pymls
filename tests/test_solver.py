@@ -31,6 +31,9 @@ import numpy as np
 from pymls import Solver, Layer, backing, from_yaml
 from pymls.media import Air, EqFluidJCA
 
+# use assertions from unittest
+asserts = unittest.TestCase('__init__')
+
 THIS_FILE_DIR = os.path.dirname(os.path.realpath(__file__))
 
 
@@ -42,7 +45,7 @@ BACKINGS = [('rigid', backing.rigid), ('transmission', backing.transmission)]
 NB_PLACES = 10
 
 
-class SolverTests(unittest.TestCase):
+class TestSolver:
 
     def test_air_analytical(self):
 
@@ -59,7 +62,7 @@ class SolverTests(unittest.TestCase):
 
                 R_analytical = (Z_s-Air.Z)/(Z_s+Air.Z)
 
-                self.assertAlmostEqual(
+                asserts.assertAlmostEqual(
                     R_analytical,
                     result['R'][i_f],
                     NB_PLACES,
@@ -87,9 +90,9 @@ class SolverTests(unittest.TestCase):
                         S.backing = backing_func
                         result = S.solve(l[0], l[1])
 
-                        self.assertAlmostEqual(result['R'][0], l[2]+1j*l[3], tol)
+                        asserts.assertAlmostEqual(result['R'][0], l[2]+1j*l[3], tol)
                         if backing_func == backing.transmission:
-                            self.assertAlmostEqual(result['T'][0], l[4]+1j*l[5], tol)
+                            asserts.assertAlmostEqual(result['T'][0], l[4]+1j*l[5], tol)
 
     def test_elastic_rigid_numerical(self):
         self.helper_numerical_tests(['wood', 'glass'], BACKINGS[:0], NB_PLACES)
@@ -129,9 +132,9 @@ class SolverTests(unittest.TestCase):
                     S.backing = backing_func
                     result = S.solve(l[0], l[1])
 
-                    self.assertAlmostEqual(result['R'][0], l[2]+1j*l[3], tol)
+                    asserts.assertAlmostEqual(result['R'][0], l[2]+1j*l[3], tol)
                     if backing_func == backing.transmission:
-                        self.assertAlmostEqual(result['T'][0], l[4]+1j*l[5], tol)
+                        asserts.assertAlmostEqual(result['T'][0], l[4]+1j*l[5], tol)
 
     def test_pem_bois_rigid_numerical(self):
         self.helper_bi_mat('foam2', 'wood', BACKINGS[:0], 10)
@@ -166,12 +169,12 @@ class SolverTests(unittest.TestCase):
                             S.backing = backing_func
                             result = S.solve(l[0], a)
 
-                            self.assertAlmostEqual(
+                            asserts.assertAlmostEqual(
                                 result['R'][0], l[2]+1j*l[3], tol,
                                 '(reflection) {}: f={}Hz angle={}deg d={:2.3f}m'.format( mat_name, l[0], a, d)
                             )
                             if backing_func == backing.transmission:
-                                self.assertAlmostEqual(
+                                asserts.assertAlmostEqual(
                                     result['T'][0], l[5]+1j*l[6], tol,
                                     '(transmission) {}: f={}Hz angle={}deg d={:2.3f}m'.format( mat_name, l[0], a, d)
                                 )
@@ -206,14 +209,14 @@ class SolverTests(unittest.TestCase):
                         S.backing = backing_func
                         result = S.solve(l[0], a)
 
-                        self.assertAlmostEqual(
+                        asserts.assertAlmostEqual(
                             result['R'][0], l[2]+1j*l[3], tol,
                             '(reflection) {} {} : f={}Hz angle={}deg d1={:2.3f}m d2={:2.3f}m'.format(
                                 mat1_name, mat2_name, l[0], a, d1, d2
                             )
                         )
                         if backing_func == backing.transmission:
-                            self.assertAlmostEqual(
+                            asserts.assertAlmostEqual(
                                 result['T'][0], l[5]+1j*l[6], tol,
                                 '(transmission) {} {} : f={}Hz angle={}deg d1={:2.3f}m d2={:2.3f}m'.format(
                                     mat1_name, mat2_name, l[0], a, d1, d2

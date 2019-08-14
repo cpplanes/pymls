@@ -22,7 +22,7 @@
 # copies or substantial portions of the Software.
 #
 
-import unittest
+import pytest
 import tempfile
 import os
 
@@ -30,46 +30,44 @@ from pymls.media import from_yaml, Air, EqFluidJCA
 from pymls.media.medium import Medium
 
 
-class MediaLoadingTests(unittest.TestCase):
+class TestMediaLoading:
 
-    def setUp(self):
-        self.yaml_file = tempfile.mkstemp()[1]
+    @pytest.fixture
+    def yaml_fn(self, tmpdir):
+        return tmpdir.join('medium.yaml')
 
-    def tearDown(self):
-        os.remove(self.yaml_file)
+    def test_file_not_found(self, tmpdir):
 
-    def test_file_not_found(self):
+        with pytest.raises(IOError):
+            from_yaml(tmpdir.join('inexistent.yaml'))
 
-        with self.assertRaises(IOError):
-            from_yaml(self.yaml_file+'_inexistent')
-
-    def test_bad_medium_type(self):
-        with open(self.yaml_file, 'w') as fh:
+    def test_bad_medium_type(self, yaml_fn):
+        with open(yaml_fn, 'w') as fh:
             fh.write('medium_type: phony_medium\n')
 
-        with self.assertRaises(ValueError):
-            from_yaml(self.yaml_file)
+        with pytest.raises(ValueError):
+            from_yaml(yaml_fn)
 
-    def test_missing_parameter(self):
+    def test_missing_parameter(self, yaml_fn):
         params = ['phi', 'sigma', 'alpha', 'Lambda_prime']
 
-        with open(self.yaml_file, 'w') as fh:
+        with open(yaml_fn, 'w') as fh:
             fh.write('medium_type: eqf\n')
             for p in params:
                 fh.write('{}: 42\n'.format(p))
 
-        with self.assertRaises(LookupError):
-            from_yaml(self.yaml_file)
+        with pytest.raises(LookupError):
+            from_yaml(yaml_fn)
 
-    def test_ok_loading_eqf(self):
+    def test_ok_loading_eqf(self, yaml_fn):
         params = ['phi', 'sigma', 'alpha', 'Lambda_prime', 'Lambda',
                   'rho_1', 'nu', 'E', 'eta']
 
-        with open(self.yaml_file, 'w') as fh:
+        with open(yaml_fn, 'w') as fh:
             fh.write('medium_type: eqf\n')
             for ii, p in enumerate(params):
                 fh.write('{}: {}\n'.format(p, ii))
 
-        medium = from_yaml(self.yaml_file)
+        medium = from_yaml(yaml_fn)
         for ii, p in enumerate(params):
-            self.assertEqual(getattr(medium, p), ii)
+            assert getattr(medium, p) == ii
