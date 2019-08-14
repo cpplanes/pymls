@@ -29,10 +29,10 @@ from pymls.media import Air
 
 def rigid(omega, k_x):
 
-    return np.matrix([
+    return np.array([
         [0],
         [1]
-    ])
+    ], dtype=np.complex)
 
 
 def transmission(omega, k_x):
@@ -41,4 +41,4 @@ def transmission(omega, k_x):
     return np.array([
         [-1j*k_z/(Air.rho*omega**2)],
         [1]
-    ])
+    ], dtype=np.complex)

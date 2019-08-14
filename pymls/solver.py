@@ -391,14 +391,14 @@ class Solver(object):
         k_z = sqrt(k_air**2-k_x**2)
         u_z = 1j*k_z/(Air.rho*omega**2)
 
-        Omega_0_fluid = np.matrix([
+        Omega_0_fluid = np.array([
             [-u_z],
             [-1]
-        ])
-        S_fluid = np.matrix([
+        ], dtype=np.complex)
+        S_fluid = np.array([
             [-u_z],
             [1]
-        ])
+        ], dtype=np.complex)
 
         temp = np.array([
             [Omega_minus[0,0], Omega_0_fluid[0,0]],
@@ -498,14 +498,14 @@ class Solver(object):
         k_z = sqrt(k_air**2-k_x**2)
         u_z = 1j*k_z/(Air.rho*omega**2)
 
-        Omega_0_fluid = np.matrix([
+        Omega_0_fluid = np.array([
             [-u_z],
             [-1]
-        ])
-        S_fluid = np.matrix([
+        ], dtype=np.complex)
+        S_fluid = np.array([
             [-u_z],
             [1]
-        ])
+        ], dtype=np.complex)
 
         temp = np.array([
             [Omega_minus[0,0], Omega_0_fluid[0,0]],

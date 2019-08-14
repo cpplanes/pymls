@@ -43,19 +43,19 @@ def transfert_fluid(Omega_minus, omega, k_x, medium, d):
     lambda_ = -sqrt(k_x**2-delta**2)
 
     # Matrix of eigenvectors , Eq (A10) in JAP 2013 corrected
-    Phi = np.matrix([
+    Phi = np.array([
         [-lambda_/(rho*omega**2), lambda_/(rho*omega**2)],
         [1, 1]
-    ])
+    ], dtype=np.complex)
 
     # Analytical inverse of Phi
-    Psi = (rho*omega**2/(2*lambda_))*np.matrix([
+    Psi = (rho*omega**2/(2*lambda_))*np.array([
         [-1, lambda_/(rho*omega**2)],
         [1, lambda_/(rho*omega**2)]
-    ])
+    ], dtype=np.complex)
 
-    Omega_plus = Phi[:,0] + np.exp(-2*lambda_*d)*Phi[:,1].dot(Psi[1,:]).dot(Omega_minus) / (Psi[0,:].dot(Omega_minus))
+    Omega_plus = Phi[:,0].reshape(2,1) + np.exp(-2*lambda_*d) * (Phi[:,1].reshape(2,1) @ Psi[1,:].reshape(1,2)).dot(Omega_minus) / (Psi[0,:].reshape(1,2) @ Omega_minus)
 
-    Xi = np.exp(-lambda_*d)/np.dot(Psi[0,:], Omega_minus)
+    Xi = np.exp(-lambda_*d)/Psi[0,:].reshape(1,2).dot(Omega_minus)
 
     return (Omega_plus, Xi)
