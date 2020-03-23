@@ -13,7 +13,7 @@ idna==2.7
 imagesize==1.0.0
 Jinja2==2.10.1
 kiwisolver==1.0.1
-MarkupSafe==1.0
+MarkupSafe>=1.0
 mccabe==0.6.1
 more-itertools==4.3.0
 numpy==1.15.1
