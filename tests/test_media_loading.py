@@ -26,7 +26,7 @@ import pytest
 import tempfile
 import os
 
-from pymls.media import from_yaml, Air, EqFluidJCA
+from pymls.media import from_yaml, Air, EqFluidJCA, Fluid, PEM, Elastic
 from pymls.media.medium import Medium
 
 
@@ -61,7 +61,20 @@ class TestMediaLoading:
         with pytest.raises(LookupError):
             from_yaml(yaml_fn)
 
-    def test_ok_loading_eqf(self, yaml_fn):
+    def test_ok_loading_eqf_withoutopts(self, yaml_fn):
+        params = ['phi', 'sigma', 'alpha', 'Lambda_prime', 'Lambda']
+
+        with open(yaml_fn, 'w') as fh:
+            fh.write('medium_type: eqf\n')
+            for ii, p in enumerate(params):
+                fh.write('{}: {}\n'.format(p, ii))
+
+        medium = from_yaml(yaml_fn)
+        for ii, p in enumerate(params):
+            assert getattr(medium, p) == ii
+
+
+    def test_ok_loading_eqf_withopts(self, yaml_fn):
         params = ['phi', 'sigma', 'alpha', 'Lambda_prime', 'Lambda',
                   'rho_1', 'nu', 'E', 'eta']
 
@@ -73,3 +86,92 @@ class TestMediaLoading:
         medium = from_yaml(yaml_fn)
         for ii, p in enumerate(params):
             assert getattr(medium, p) == ii
+
+    def test_ok_loading_fluid(self, yaml_fn):
+        params = ['rho', 'c']
+
+        with open(yaml_fn, 'w') as fh:
+            fh.write('medium_type: fluid\n')
+            for ii, p in enumerate(params):
+                fh.write('{}: {}\n'.format(p, ii))
+
+        medium = from_yaml(yaml_fn)
+        for ii, p in enumerate(params):
+            assert getattr(medium, p) == ii
+
+    def test_ok_loading_pem(self, yaml_fn):
+        params = ['phi', 'sigma', 'alpha', 'Lambda_prime', 'Lambda', 'rho_1', 'nu', 'E',
+                  'eta', 'loss_type']
+
+        with open(yaml_fn, 'w') as fh:
+            fh.write('medium_type: pem\n')
+            for ii, p in enumerate(params):
+                if p!='loss_type':
+                    fh.write('{}: {}\n'.format(p, ii))
+                else:
+                    fh.write('{}: structural\n'.format(p))
+
+        medium = from_yaml(yaml_fn)
+        for ii, p in enumerate(params):
+            if p!='loss_type':
+                assert getattr(medium, p) == ii
+            else:
+                assert getattr(medium, p) == 'structural'
+
+    def test_ok_loading_elastic(self, yaml_fn):
+        params = ['E', 'nu', 'rho', 'eta']
+
+        with open(yaml_fn, 'w') as fh:
+            fh.write('medium_type: elastic\n')
+            for ii, p in enumerate(params):
+                fh.write('{}: {}\n'.format(p, ii))
+
+        medium = from_yaml(yaml_fn)
+        for ii, p in enumerate(params):
+            assert getattr(medium, p) == ii
+
+    def test_failed_forced_loading(self, yaml_fn):
+        pem_params = ['phi', 'sigma', 'alpha', 'Lambda_prime', 'Lambda', 'rho_1', 'nu', 'E',
+                  'eta', 'loss_type']
+        eqf_params = ['phi', 'sigma', 'alpha', 'Lambda_prime', 'Lambda',
+                  'rho_1', 'nu', 'E', 'eta']
+
+        with open(yaml_fn, 'w') as fh:
+            fh.write('medium_type: pem\n')
+            for ii, p in enumerate(pem_params):
+                if p!='loss_type':
+                    fh.write('{}: {}\n'.format(p, ii))
+                else:
+                    fh.write('{}: structural\n'.format(p))
+
+        medium = from_yaml(yaml_fn, EqFluidJCA)
+        for ii, p in enumerate(eqf_params):
+            assert getattr(medium, p) == ii
+
+
+class TestMediaInstance:
+
+    def test_instanciation_fluid(self):
+        params = ['rho', 'c']
+        medium = Fluid(**dict(zip(params, range(len(params)))))
+        for ii, p in enumerate(params):
+            assert getattr(medium, p) == ii
+
+    def test_instanciation_eqf(self):
+        params = ['phi', 'sigma', 'alpha', 'Lambda_prime', 'Lambda']
+        medium = EqFluidJCA(**dict(zip(params, range(len(params)))))
+        for ii, p in enumerate(params):
+            assert getattr(medium, p) == ii
+
+    def test_instanciation_elastic(self):
+        params = ['E', 'nu', 'rho', 'eta']
+        medium = Elastic(**dict(zip(params, range(len(params)))))
+        for ii, p in enumerate(params):
+            assert getattr(medium, p) == ii
+
+    def test_instanciation_pem(self):
+        params = ['phi', 'sigma', 'alpha', 'Lambda_prime', 'Lambda', 'rho_1', 'nu', 'E', 'eta']
+        medium = PEM(**dict(zip(params, range(len(params)))), loss_type='structural')
+        for ii, p in enumerate(params):
+            assert getattr(medium, p) == ii
+        assert medium.loss_type == 'structural'
