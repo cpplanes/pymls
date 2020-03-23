@@ -39,7 +39,7 @@ class Fluid(Medium):
 
     MEDIUM_TYPE = 'fluid'
     MODEL = MEDIUM_TYPE
-    EXPECTED_FIELDS = [
+    EXPECTED_PARAMS = [
         ('rho', float),  # Density
         ('c', float),  # Sound speed
     ]
