@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.6.0 - 2020/03/20
+
+### Changed
+
+	- Possibility to instaciate media through arguments to __init__()
+	- New tests
+
+### Fixed
+
+	- Loading of fluid media
+
 ## 1.5.2 - 2019/06/24
 
 ### Changed
