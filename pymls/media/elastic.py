@@ -40,9 +40,7 @@ class Elastic(Medium):
         ('mu', complex)
     ]
 
-    def __init__(self):
-        super().__init__()
-
+    def __init__(self, **params):
         self.E = None
         self.rho = None
         self.nu = None
@@ -50,8 +48,8 @@ class Elastic(Medium):
         self.lambda_ = None
         self.mu = None
 
-    def from_dict(self, *a, **kw):
-        super().from_dict(*a, **kw)
+        super().__init__(**params)
+
 
     def _compute_missing(self):
 

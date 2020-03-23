@@ -44,12 +44,11 @@ class Fluid(Medium):
         ('c', float),  # Sound speed
     ]
 
-    def __init__(self):
-        """ Nothing special todo for fluid """
-        super().__init__()
-
+    def __init__(self, **params):
         self.rho = None
         self.c = None
+
+        super().__init__(**params)
 
     def update_frequency(self, omega):
         """ For a fluid, does nothing."""

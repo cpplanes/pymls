@@ -45,9 +45,14 @@ class PEM(EqFluidJCA):
         ('loss_type', str),  # type of losses for the frame (anelastic or structural)
     ]
 
-    # def from_dict(self, *a, **kw):
-    #     super().from_dict(*a, **kw)
-    #     self.__compute_missing()
+    def __init__(self, **params):
+        self.rho_1 = None
+        self.nu = None
+        self.E = None
+        self.eta = None
+        self.loss_type = None
+
+        super().__init__(**params)
 
     def _compute_missing(self):
         super()._compute_missing()

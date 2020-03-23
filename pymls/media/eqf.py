@@ -87,14 +87,14 @@ class EqFluidJCA(Medium):
         ('eta', float)  # viscosity
     ]
 
-    def __init__(self):
-        super().__init__()
-
+    def __init__(self, **params):
         self.phi = None
         self.sigma = None
         self.alpha = None
         self.Lambda_prime = None
         self.Lambda = None
+
+        super().__init__(**params)
 
     def _compute_missing(self):
         """ Computes the required constant parameters missing from the definition

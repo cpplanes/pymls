@@ -50,9 +50,12 @@ class Medium(object):
     MEDIUM_TYPE = 'generic'
     MODEL = ''
 
-    def __init__(self):
+    def __init__(self, **params):
         self.omega = -1
         self.name = 'Generic Medium'
+
+        if params:
+            self.from_dict(params)
 
     def __str__(self):
         return '{} (type: {}, model: {})'.format(
