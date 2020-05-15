@@ -46,7 +46,4 @@ setup(name='pymls',
         'PyYAML>=5.1',
         'mediapack>=0.1',
     ],
-    extras_require={
-        'HDF5 export': ['h5py>=2.7.1']
-    }
 )
