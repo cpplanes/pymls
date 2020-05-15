@@ -29,7 +29,7 @@ import itertools
 import numpy as np
 
 from pymls import Solver, Layer, backing, from_yaml
-from pymls.media import Air, EqFluidJCA
+from mediapack import Air, EqFluidJCA
 
 # use assertions from unittest
 asserts = unittest.TestCase('__init__')

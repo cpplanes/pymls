@@ -24,7 +24,7 @@
 
 import yaml
 
-from ..media import from_yaml
+from mediapack.utils import from_yaml
 from ..solver import Solver
 from pymls.backing import rigid, transmission
 

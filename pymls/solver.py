@@ -29,7 +29,7 @@ from pymls.analysis import Analysis
 from pymls.interface.utils import generic_interface, rigid_interface
 from pymls.layers import generic_layer, StochasticLayer
 import pymls.backing as backing
-from pymls.media import Air
+from mediapack import Air
 
 
 class IncompleteDefinitionError(Exception):

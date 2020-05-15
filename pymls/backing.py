@@ -24,7 +24,7 @@
 
 import numpy as np
 from numpy.lib.scimath import sqrt
-from pymls.media import Air
+from mediapack import Air
 
 
 def rigid(omega, k_x):
