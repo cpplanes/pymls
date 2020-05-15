@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.7.0 - 2020/05/20
+
+### Changed
+
+	- Media management now has its own package : mediapack
+
+### Removed
+
+	- HDF5 capabilities (unused)
+
 ## 1.6.0 - 2020/03/20
 
 ### Changed
