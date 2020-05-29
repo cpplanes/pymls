@@ -340,11 +340,13 @@ class Solver(object):
 
         # compute k_x
         k_x = omega/Air.c*np.sin(theta_inc*np.pi/180)
+        k_air = omega*sqrt(Air.rho/Air.K)
+        k_z = sqrt(k_air**2-k_x**2)
 
         # load the backing vector to initiate recursion
         Omega_plus = self.backing(omega, k_x)
 
-        # goes backward (from last to first layer) and compute successive
+        # go backward (from last to first layer) and compute successive
         # Omega_plus/minus
         back_prop = np.eye(1)
         for invertedi_L, L in enumerate(self.layers[::-1]):
@@ -353,6 +355,10 @@ class Solver(object):
 
             if invertedi_L == 0:  # right-most layer
                 if self.backing == backing.transmission:
+                    # check if the last layer is identical to the transmission medium
+                    if L.medium.MODEL == 'fluid' and L.medium.c == Air.c and L.medium.rho == Air.rho:
+                        Omega_plus *= np.exp(-1j*k_z*L.thickness)
+                        continue
                     interface_func = generic_interface(L.medium, Air)
                 else:
                     interface_func = rigid_interface(L.medium)
@@ -387,8 +393,6 @@ class Solver(object):
             back_prop = back_prop.dot(tau)
 
         # Solve for the first layer
-        k_air = omega*sqrt(Air.rho/Air.K)
-        k_z = sqrt(k_air**2-k_x**2)
         u_z = 1j*k_z/(Air.rho*omega**2)
 
         Omega_0_fluid = np.array([
