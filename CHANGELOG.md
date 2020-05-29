@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.7.1 - 2020/05/29
+
+### Changed
+
+	- Fixed a bug with singular matrices when the last layers is identical to the
+	transmission medium
+
+### Removed
+
+	- The whole media/ package
+
 ## 1.7.0 - 2020/05/20
 
 ### Changed
