@@ -44,6 +44,6 @@ setup(name='pymls',
     install_requires=[
         'numpy>=1.13.1',
         'PyYAML>=5.1',
-        'mediapack>=0.1',
+        'mediapack>=0.3',
     ],
 )
