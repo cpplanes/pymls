@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.8.0 - 2021/10/27
+
+### Changed
+
+	- Fixed the formulation of the elastic to rigid backing interface
+
 ## 1.7.1 - 2020/05/29
 
 ### Changed
