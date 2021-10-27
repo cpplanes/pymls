@@ -41,9 +41,8 @@ def pem_rigid_interface(O):
 def elastic_rigid_interface(O):
 
     Omega_minus = np.zeros((4,2), dtype=np.complex)
-    Omega_minus[1,0] = O[0]
+    Omega_minus[0,1] = O[1]
     Omega_minus[2,0] = -O[1]
-    Omega_minus[3,1] = 1
 
     tau_tilde = 0
 
