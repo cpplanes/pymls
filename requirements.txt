@@ -16,7 +16,7 @@ kiwisolver==1.0.1
 MarkupSafe>=1.0
 mccabe==0.6.1
 more-itertools==4.3.0
-numpy==1.15.1
+numpy==1.22.0
 numpydoc==0.8.0
 packaging==17.1
 pluggy==0.7.1
