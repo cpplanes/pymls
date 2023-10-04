@@ -38,7 +38,7 @@ def transfert_elastic(Omega_minus, omega, k_x, medium, d):
     alpha_p = -1j*medium.lambda_*delta_p**2 - 2j*medium.mu*beta_p**2
     alpha_s = 2j*medium.mu*beta_s*k_x
 
-    Phi_0 = np.zeros((4,4),dtype=np.complex)
+    Phi_0 = np.zeros((4,4),dtype=np.complex128)
     Phi_0[0,0] = -2j*medium.mu*beta_p*k_x
     Phi_0[0,1] = 2j*medium.mu*beta_p*k_x
     Phi_0[0,2] = 1j*medium.mu*(beta_s**2-k_x**2)
@@ -67,8 +67,8 @@ def transfert_elastic(Omega_minus, omega, k_x, medium, d):
     ])
     index = np.argsort(V_0.real)
 
-    Phi = np.zeros((4,4), dtype=np.complex)
-    lambda_ = np.zeros((4), dtype=np.complex)
+    Phi = np.zeros((4,4), dtype=np.complex128)
+    lambda_ = np.zeros((4), dtype=np.complex128)
 
     for i_m in range(0,4):
         Phi[:,i_m] = Phi_0[:,index[3-i_m]]

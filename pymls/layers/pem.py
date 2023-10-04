@@ -35,7 +35,7 @@ def transfert_pem(Omega_minus, omega, k_x, medium, d):
     alpha_2 = -1j*medium.A_hat*medium.delta_2**2 - 2j*medium.N*beta_2**2
     alpha_3 = 2j*medium.N*beta_3*k_x
 
-    Phi_0 = np.zeros((6,6), dtype=np.complex)
+    Phi_0 = np.zeros((6,6), dtype=np.complex128)
     Phi_0[0,0] = -2j*medium.N*beta_1*k_x
     Phi_0[0,1] = 2j*medium.N*beta_1*k_x
     Phi_0[0,2] = -2j*medium.N*beta_2*k_x

@@ -32,7 +32,7 @@ def rigid(omega, k_x):
     return np.array([
         [0],
         [1]
-    ], dtype=np.complex)
+    ], dtype=np.complex128)
 
 
 def transmission(omega, k_x):
@@ -41,4 +41,4 @@ def transmission(omega, k_x):
     return np.array([
         [-1j*k_z/(Air.rho*omega**2)],
         [1]
-    ], dtype=np.complex)
+    ], dtype=np.complex128)

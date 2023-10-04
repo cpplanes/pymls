@@ -41,13 +41,13 @@ def fluid_pem_interface(O):
 
 def pem_fluid_interface(O):
 
-    Omega_minus = np.zeros((6,3), dtype=np.complex)
+    Omega_minus = np.zeros((6,3), dtype=np.complex128)
     Omega_minus[1,1] = 1
     Omega_minus[2,0] = O[0,0]
     Omega_minus[4,0] = O[1,0]
     Omega_minus[5,2] = 1
 
-    tau_tilde = np.zeros((1,3), dtype=np.complex)
+    tau_tilde = np.zeros((1,3), dtype=np.complex128)
     tau_tilde[0,0] = 1
 
     return (Omega_minus, tau_tilde)
@@ -55,12 +55,12 @@ def pem_fluid_interface(O):
 
 def elastic_fluid_interface(O):
 
-    Omega_minus = np.zeros((4,2), dtype=np.complex)
+    Omega_minus = np.zeros((4,2), dtype=np.complex128)
     Omega_minus[1,0] = O[0,0]
     Omega_minus[2,0] = -O[1,0]
     Omega_minus[3,1] = 1
 
-    tau_tilde = np.zeros((1,2), dtype=np.complex)
+    tau_tilde = np.zeros((1,2), dtype=np.complex128)
     tau_tilde[0,0] = 1
 
     return (Omega_minus, tau_tilde)
@@ -77,7 +77,7 @@ def fluid_elastic_interface(O):
 
 def pem_elastic_interface(O):
 
-    Omega_minus = np.zeros((6,3), dtype=np.complex)
+    Omega_minus = np.zeros((6,3), dtype=np.complex128)
     Omega_minus[0,0:2] = O[0,0:2]
     Omega_minus[1,0:2] = O[1,0:2]
     Omega_minus[2,0:2] = O[1,0:2]
@@ -86,7 +86,7 @@ def pem_elastic_interface(O):
     Omega_minus[4,2] = 1
     Omega_minus[5,0:2] = O[3,0:2]
 
-    tau_tilde = np.zeros((2,3), dtype=np.complex)
+    tau_tilde = np.zeros((2,3), dtype=np.complex128)
     tau_tilde[0,0] = 1
     tau_tilde[1,1] = 1
     return (Omega_minus, tau_tilde)
@@ -95,7 +95,7 @@ def pem_elastic_interface(O):
 def elastic_pem_interface(O):
 
     Dplus = np.array([0, 1, -1, 0, 0, 0])
-    Dminus = np.zeros((4,6), dtype=np.complex)
+    Dminus = np.zeros((4,6), dtype=np.complex128)
     Dminus[0,0] = 1
     Dminus[1,1] = 1
     Dminus[2,3] = 1

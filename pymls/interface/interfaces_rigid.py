@@ -27,7 +27,7 @@ import numpy as np
 
 def pem_rigid_interface(O):
 
-    Omega_minus = np.zeros((6,3), dtype=np.complex)
+    Omega_minus = np.zeros((6,3), dtype=np.complex128)
     Omega_minus[2,0] = O[0]
     Omega_minus[4,0] = O[1]
     Omega_minus[0,1] = 1
@@ -40,7 +40,7 @@ def pem_rigid_interface(O):
 
 def elastic_rigid_interface(O):
 
-    Omega_minus = np.zeros((4,2), dtype=np.complex)
+    Omega_minus = np.zeros((4,2), dtype=np.complex128)
     Omega_minus[0,1] = O[1]
     Omega_minus[2,0] = -O[1]
 
