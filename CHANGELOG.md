@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.8.1 - 2024/12/12
+
+### Changed
+
+	- Fix np.complex => np.complex128
+
 ## 1.8.0 - 2021/10/27
 
 ### Changed
